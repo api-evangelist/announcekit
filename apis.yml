@@ -1,0 +1,41 @@
+aid: announcekit
+name: AnnounceKit
+description: >-
+  AnnounceKit is a user notification and changelog widget for communicating
+  product and API updates.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Deprecation
+  - Changelog
+  - Notifications
+  - Widgets
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/announcekit/refs/heads/main/apis.yml
+created: '2026-03-29'
+modified: '2026-03-29'
+specificationVersion: '0.19'
+apis:
+  - aid: announcekit:announcekit
+    name: AnnounceKit
+    description: >-
+      AnnounceKit is a user notification and changelog widget for communicating
+      product and API updates.
+    humanURL: https://announcekit.app/
+    tags:
+      - Deprecation
+      - Changelog
+      - Notifications
+    properties:
+      - type: Documentation
+        url: https://announcekit.app/docs
+      - type: Website
+        url: https://announcekit.app/
+common:
+  - type: Website
+    url: https://announcekit.app/
+  - type: Documentation
+    url: https://announcekit.app/docs
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
