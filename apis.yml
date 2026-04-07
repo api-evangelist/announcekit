@@ -6,8 +6,8 @@ description: >-
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-  - Deprecation
   - Changelog
+  - Deprecation
   - Notifications
   - Widgets
 url: >-
@@ -23,8 +23,8 @@ apis:
       product and API updates.
     humanURL: https://announcekit.app/
     tags:
-      - Deprecation
       - Changelog
+      - Deprecation
       - Notifications
     properties:
       - type: Documentation
