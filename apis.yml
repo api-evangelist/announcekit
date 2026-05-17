@@ -67,7 +67,7 @@ common:
     type: Pricing
   - url: https://changelog.announcekit.app/
     name: AnnounceKit Changelog
-    type: Changelog
+    type: ChangeLog
   - url: https://github.com/announcekitapp
     name: AnnounceKit GitHub Organization
     type: GitHubOrganization
