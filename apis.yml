@@ -53,6 +53,8 @@ apis:
       - type: GitHub
         url: https://github.com/announcekitapp
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/announcekit
   - url: https://announcekit.app/
     name: AnnounceKit Website
     type: Website
