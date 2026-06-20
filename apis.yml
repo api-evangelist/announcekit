@@ -7,7 +7,7 @@ description: >-
   modes, email digests, Slack, webhooks, and RSS, with GraphQL and REST APIs for
   programmatic integration.
 type: Index
-image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
 - Changelog
 - Feature Requests
