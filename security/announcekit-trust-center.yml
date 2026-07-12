@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: searched
+probe: true
+source: https://announcekit.app/trust
+url: https://announcekit.app/trust
+certifications:
+- SOC 2
+- GDPR
+evidence:
+- source: https://announcekit.app/trust
+  keywords:
+  - soc 2
+  - soc2
+  - trust center
+  - gdpr

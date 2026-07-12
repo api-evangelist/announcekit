@@ -55,6 +55,10 @@ apis:
   - url: graphql/announcekit-graphql.md
     type: GraphQL
 common:
+- type: TrustCenter
+  url: security/announcekit-trust-center.yml
+- type: DomainSecurity
+  url: security/announcekit-domain-security.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/announcekit
 - url: https://announcekit.app/
@@ -87,6 +91,8 @@ common:
 - url: https://announcekit.app/terms
   name: Terms of Service
   type: TermsOfService
+- url: http://announcekit.app/blog/
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
