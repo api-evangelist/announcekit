@@ -24,6 +24,15 @@ tags:
 - Changelog
 - Feature Requests
 - NPS
+- Notification
+- Product Communication
+- Roadmaps
+- Software-as-a-Service
+- Widgets
+tags_raw:
+- Changelog
+- Feature Requests
+- NPS
 - Notifications
 - Product Communication
 - Roadmap
@@ -46,6 +55,16 @@ apis:
   humanURL: https://announcekit.app/docs
   baseURL: https://announcekit.app
   tags:
+  - Changelog
+  - Feature Requests
+  - GraphQL
+  - NPS
+  - Notification
+  - Product Updates
+  - REST
+  - Webhook
+  - Widgets
+  tags_raw:
   - Changelog
   - Feature Requests
   - GraphQL
