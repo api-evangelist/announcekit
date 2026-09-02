@@ -1,0 +1,104 @@
+generated: '2026-09-02'
+method: searched
+source: https://changelog.announcekit.app/rss.xml
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit's public product changelog, which the company runs on its own
+  product. Dated, permalinked, and available as both RSS and Atom - a genuinely
+  machine-readable release signal. It is a PRODUCT changelog rather than an API
+  changelog: API and schema changes appear only when they are also product
+  news, and there is no separate per-version API change record.
+url: https://changelog.announcekit.app/
+feeds:
+- format: rss
+  url: https://changelog.announcekit.app/rss.xml
+  status: 200
+  content_type: application/rss+xml
+- format: atom
+  url: https://changelog.announcekit.app/atom.xml
+  status: 200
+  content_type: application/atom+xml
+scheme: dated-entries
+versioned: false
+current_version: null
+version_note: >-
+  Entries are dated and titled, not versioned. The API itself is versioned only
+  by its path segment (/gq/v2); no release is tagged against an API version.
+entry_count_in_feed: 20
+entries:
+- date: '2026-08-13'
+  title: Knowledge Base beta is here - want in?
+  url: https://changelog.announcekit.app/knowledge-base-beta-is-here---want-in-j4YNy
+  type: addition
+  breaking: false
+  api_relevant: true
+  note: >-
+    The knowledgeBase* queries and mutations are present in the live GraphQL
+    schema. They are not exposed by the MCP server.
+- date: '2026-07-02'
+  title: 'The AnnounceKit MCP Server is Here: Your Changelog Now Ships Itself'
+  url: https://changelog.announcekit.app/the-announcekit-mcp-server-is-here-your-changelog-now-ships-itself-43MtP2
+  type: addition
+  breaking: false
+  api_relevant: true
+- date: '2026-04-21'
+  title: We're ending support for older TLS versions (1.0 and 1.1)
+  url: https://changelog.announcekit.app/were-ending-support-for-older-tls-versions-1.0-and-1.1-1ajjMI
+  type: deprecation
+  breaking: true
+  api_relevant: true
+- date: '2026-04-01'
+  title: 'Major Changelog Update Released: Welcome to the Modern Layout Era'
+  url: https://changelog.announcekit.app/major-changelog-update-released-welcome-to-the-modern-layout-era-475Cj6
+  type: change
+  breaking: false
+  api_relevant: false
+- date: '2026-01-15'
+  title: A major upgrade to Top Bar In-App Notifications
+  url: https://changelog.announcekit.app/a-major-upgrade-to-top-bar-in-app-notifications-2ALQf6
+  type: change
+  breaking: false
+  api_relevant: false
+- date: '2025-11-06'
+  title: Introducing the Modern Widget Layout (BETA)
+  url: https://changelog.announcekit.app/introducing-the-modern-widget-layout-beta-4tDCX6
+  type: addition
+  breaking: false
+  api_relevant: false
+- date: '2025-05-27'
+  title: Disable Feedback & Reactions per Post
+  url: https://changelog.announcekit.app/disable-feedback-reactions-per-post-4ltnUI
+  type: addition
+  breaking: false
+  api_relevant: true
+  note: Corresponds to Post.is_feedback_disabled in the schema.
+- date: '2025-04-11'
+  title: Bring Product Updates to Your Flutter Apps with Our New SDK
+  url: https://changelog.announcekit.app/bring-product-updates-to-your-flutter-apps-with-our-new-sdk-cPwT6
+  type: addition
+  breaking: false
+  api_relevant: true
+- date: '2025-02-27'
+  title: Role-Based Access Control (RBAC) Now Live!
+  url: https://changelog.announcekit.app/role-based-access-control-rbac-now-live-1J13u8
+  type: addition
+  breaking: false
+  api_relevant: true
+  note: Corresponds to the ProjectRole enum (owner, manager, editor, viewer).
+window: >-
+  The 20-entry feed window spans 2024-12-16 to 2026-08-13. The nine entries
+  above are the recent and API-relevant ones; the remainder are dashboard and
+  widget UI changes.
+gaps:
+- >-
+  No API-specific changelog. GraphQL schema changes are not announced anywhere,
+  so a consumer learns about a new field by re-introspecting.
+- >-
+  Some older entries in the feed contain unrendered merge tags
+  ({{userName,fallback="There"}}), because the changelog is written with
+  AnnounceKit's own email personalisation and the RSS rendering does not
+  substitute them.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

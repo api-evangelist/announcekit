@@ -52,7 +52,7 @@ tags_raw:
 url: >-
   https://raw.githubusercontent.com/api-evangelist/announcekit/refs/heads/main/apis.yml
 created: '2026-03-29'
-modified: '2026-04-19'
+modified: '2026-09-02'
 specificationVersion: '0.23'
 apis:
 - aid: announcekit:announcekit-api
@@ -63,8 +63,8 @@ apis:
     automating product changelog workflows. Supports 11 webhook event types for
     custom integrations. Available on all plans, it also offers SDKs for React,
     Vue, Angular, iOS, Flutter, and React Native.
-  humanURL: https://announcekit.app/docs
-  baseURL: https://announcekit.app
+  humanURL: https://announcekit.app/docs/graphql-api
+  baseURL: https://announcekit.app/gq/v2
   tags:
   - Changelog
   - Feature Requests
@@ -88,14 +88,38 @@ apis:
   properties:
   - type: Documentation
     url: https://announcekit.app/docs
+  - type: APIReference
+    url: https://announcekit.app/docs/graphql-api
   - type: Website
     url: https://announcekit.app/
-  - type: GraphQL
-    url: https://announcekit.app/docs/graphql
   - type: GitHub
     url: https://github.com/announcekitapp
   - url: graphql/announcekit-graphql.md
     type: GraphQL
+  - url: graphql/announcekit-schema.graphql
+    type: GraphQL
+  - url: mcp/announcekit-mcp.yml
+    type: MCPServer
+  - url: mcp/announcekit-tool-crosswalk.yml
+    type: ToolCrosswalk
+  - url: asyncapi/announcekit-webhooks.yml
+    type: Webhooks
+  - url: authentication/announcekit-authentication.yml
+    type: Authentication
+  - url: scopes/announcekit-scopes.yml
+    type: OAuthScopes
+  - url: errors/announcekit-problem-types.yml
+    type: ErrorCatalog
+  - url: conventions/announcekit-conventions.yml
+    type: Conventions
+  - url: rate-limits/announcekit-rate-limits.yml
+    type: RateLimits
+  - url: conformance/announcekit-conformance.yml
+    type: Conformance
+  - url: data-model/announcekit-data-model.yml
+    type: DataModel
+  - url: lifecycle/announcekit-lifecycle.yml
+    type: Lifecycle
 common:
 - type: TrustCenter
   url: security/announcekit-trust-center.yml
@@ -130,11 +154,62 @@ common:
 - url: https://announcekit.app/privacy-policy
   name: Privacy Policy
   type: PrivacyPolicy
-- url: https://announcekit.app/terms
+- url: https://announcekit.app/terms-of-service
   name: Terms of Service
   type: TermsOfService
-- url: http://announcekit.app/blog/
+- url: https://announcekit.app/blog/
   type: Blog
+- url: packages/announcekit-packages.yml
+  name: AnnounceKit Client Libraries
+  type: Packages
+- url: packages/announcekit-packages.yml
+  name: AnnounceKit SDKs
+  type: SDKs
+- url: well-known/announcekit-well-known.yml
+  name: AnnounceKit Well-Known Documents
+  type: WellKnown
+- url: llms/announcekit-llms.txt
+  name: AnnounceKit llms.txt
+  type: LLMsTxt
+- url: skills/_index.yml
+  name: AnnounceKit Agent Skills
+  type: AgentSkill
+- url: changelog/announcekit-changelog.yml
+  name: AnnounceKit Changelog Artifact
+  type: ChangeLog
+- url: components/announcekit-components.yml
+  name: AnnounceKit Embeddable Components
+  type: Components
+- url: plans/announcekit-plans-pricing.yml
+  name: AnnounceKit Plans and Pricing
+  type: Plans
+- url: security/announcekit-trust-center.yml
+  name: AnnounceKit Compliance Program
+  type: Compliance
+- url: https://status.announcekit.app/
+  name: AnnounceKit Status Page
+  type: StatusPage
+- url: https://help.announcekit.app
+  name: AnnounceKit Help Center
+  type: Support
+- url: https://announcekit.app/product-roadmap
+  name: AnnounceKit Product Roadmap
+  type: Roadmap
+- url: https://announcekit.app/dashboard/register
+  name: AnnounceKit Sign Up
+  type: SignUp
+- url: https://announcekit.app/dashboard/login
+  name: AnnounceKit Log In
+  type: Login
+- url: https://announcekit.app/docs/mcp
+  name: AnnounceKit MCP Server Documentation
+  type: Documentation
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+
+x-enrichment:
+  date: '2026-09-02'
+  status: enriched
+  artifacts_added: 23
+  pass: local-v1

@@ -4,151 +4,156 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: AnnounceKit
 providerId: announcekit
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-02'
+generated: '2026-09-02'
+method: searched
+source: https://announcekit.app/pricing
+description: >-
+  AnnounceKit's published plans, read from the pricing page on 2026-09-02. This
+  file REPLACES a 2026-05-04 bulk-sweep scaffold that invented a free tier and
+  per-tier API request quotas AnnounceKit does not sell. The real model is flat
+  per-project pricing with no free tier, no per-seat charge, no MAU metering and
+  no published API quota - the API and webhooks are included on every plan.
 tags:
-  - Changelog
-  - Feature Requests
-  - NPS
-  - Notifications
-  - Product Communication
-  - Roadmap
-  - SaaS
-  - Widgets
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+- Changelog
+- Feature Requests
+- NPS
+- Product Communication
+- SaaS
+currency: USD
+billing_periods: [monthly, annual]
+annual_discount: 15%
+free_tier: false
+trial:
+  length_days: 15
+  credit_card_required: false
+  includes: Full access to every Scale plan feature.
+  after_trial: >-
+    The project moves to read-only mode. Posts, widgets, branding and settings
+    are preserved; upgrading restores write access. Nothing is deleted.
+refund_policy: 7-day refund policy on all plans, no questions asked.
+pricing_model: >-
+  Flat per-project. One plan is bought per project. Team size, visitor count,
+  page views, post count and subscriber count do not affect the price.
+plan_count: 5
 plans:
-  - id: announcekit-free
-    name: Free
-    type: freemium
-    description: Free entry tier for the AnnounceKit API surface. Intended for evaluation, prototyping,
-      and low-volume integrations. Real limits and pricing must be reconciled with the provider's published
-      plan documentation.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://announcekit.app
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://announcekit.app
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-    elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: AnnounceKit API
-  - id: announcekit-pro
-    name: Professional
-    type: paid
-    description: Production tier for AnnounceKit. Provides higher quotas, priority support, and access
-      to the broader API portfolio. Pricing placeholder; align with the provider's pricing page.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains:
-          - https://announcekit.app
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains:
-          - https://announcekit.app
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: global
-        domains:
-          - https://announcekit.app
-        unit: 1000
-        price: TBD
-        userMultiplied: false
-    elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: AnnounceKit API
-  - id: announcekit-enterprise
-    name: Enterprise
-    type: enterprise
-    description: Custom-negotiated tier for AnnounceKit. Includes dedicated capacity, contractual SLAs,
-      security review, data residency options, and named technical account management.
-    entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: configurable
-        domains:
-          - https://announcekit.app
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains:
-          - https://announcekit.app
-        unit: 1
-        price: custom
-        userMultiplied: false
-    elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: AnnounceKit API
+- id: announcekit-nps
+  name: AnnounceKit NPS
+  type: paid
+  price_annual_per_month: '42.00'
+  price_monthly: '49.00'
+  currency: USD
+  description: >-
+    Standalone Net Promoter Score product, priced separately from the changelog
+    plans.
+  elements:
+  - Unlimited Surveys
+  - Unlimited Responses
+  - Segmentation
+  - User Tracking
+  - Advanced Analytics
+  - Advanced Customization
+  - Set Publish & Expire Dates
+- id: announcekit-essentials
+  name: Essentials
+  type: paid
+  price_annual_per_month: '79.00'
+  price_monthly: '89.00'
+  currency: USD
+  description: Changelog, widgets, and AI to start shipping updates.
+  limits:
+  - name: team_members
+    limit: 1
+  elements:
+  - Publishing Posts
+  - Standalone Changelog Page
+  - All Widget Types
+  - Basic Branding
+  - Product Roadmap
+  - Email Updates
+  - Comments & Reactions
+  - AI-Powered Post Editor
+  - Post Analytics
+  - API & Webhooks
+- id: announcekit-growth
+  name: Growth
+  type: paid
+  price_annual_per_month: '129.00'
+  price_monthly: '149.00'
+  currency: USD
+  description: Segmentation, feature requests, analytics, and integrations.
+  limits:
+  - name: team_members
+    limit: -1
+    note: Unlimited.
+  elements:
+  - All Essentials features
+  - User Tracking
+  - Segmentation
+  - Custom Changelog URL
+  - Feature Requests
+  - Advanced Analytics
+  - Unlimited Team Members
+  - Slack
+  - Zapier
+- id: announcekit-scale
+  name: Scale
+  type: paid
+  price_annual_per_month: '339.00'
+  price_monthly: '399.00'
+  currency: USD
+  description: Boosters, multi-language, SSO, and advanced integrations.
+  limits:
+  - name: team_members
+    limit: -1
+  elements:
+  - All Growth features
+  - Post Boosters
+  - In-app Notifications
+  - Multi-Languages
+  - Email Digest
+  - SMTP
+  - Custom CSS
+  - Private Changelog Page
+  - SSO & SAML
+  - Advanced Integrations (JIRA)
+- id: announcekit-enterprise
+  name: Enterprise
+  type: enterprise
+  price: custom
+  currency: USD
+  description: Security, compliance, SLAs, and dedicated support.
+  elements:
+  - All Scale features
+  - Advanced Team Management (RBAC)
+  - Remove AnnounceKit Branding
+  - Dedicated Account Manager
+  - Private Slack Support Channel
+  - SOC 2 & Trust Center Access
+  - Annual Security Reviews
+  - Custom Invoicing & Contracts
+  - IP Access Control
+  - Audit Log
+  - Custom Contracts & SLAs
+discounts:
+- name: Startup program
+  description: Qualifying early-stage startups get 50% off any plan for 12 months.
+  url: https://announcekit.app/startup
+api_access:
+  included_on: all plans
+  note: >-
+    "API & Webhooks" appears in the Integrations row of the full feature
+    comparison across Essentials, Growth, Scale and Enterprise. AnnounceKit
+    publishes NO plan-differentiated API quota - the only documented API limit
+    is a flat 60 requests/minute per IP address (see
+    rate-limits/announcekit-rate-limits.yml), which does not vary by tier.
+gaps:
+- >-
+  No free tier. The 15-day trial is the only no-cost path, and it is
+  time-limited rather than volume-limited.
+- >-
+  No published API pricing dimension of any kind - no overage rate, no metered
+  call pricing, no included-call allowance.
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

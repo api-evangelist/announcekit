@@ -1,0 +1,102 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://announcekit.app/docs/graphql-api, https://status.announcekit.app/
+  (HTTP 200), https://changelog.announcekit.app/rss.xml (HTTP 200,
+  application/rss+xml), https://announcekit.app/pricing,
+  https://announcekit.app/security and the introspected GraphQL schema,
+  2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  Versioning, deprecation and operational-transparency posture for the
+  AnnounceKit API. AnnounceKit runs a real status page and a dated public
+  changelog, and has shipped at least one dated breaking-change notice - but it
+  publishes no API deprecation policy, no Sunset/Deprecation header support and
+  no SLA outside an Enterprise contract.
+versioning:
+  scheme: path
+  current_version: v2
+  endpoint: https://announcekit.app/gq/v2
+  policy_published: false
+  note: >-
+    The version is a path segment. No policy states how long v2 is supported,
+    what would constitute a breaking change, or whether a v1 still answers.
+    The GraphQL schema declares no @deprecated fields at all, so the schema
+    itself carries no deprecation signal.
+deprecated_operations:
+  count: 0
+  note: >-
+    Introspection of all 179 types on 2026-09-02 with includeDeprecated true
+    returned no deprecated fields or enum values. Either nothing has been
+    deprecated in place, or deprecations are removed rather than marked.
+deprecation_policy:
+  published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No RFC 8594 Sunset or Deprecation header was observed on a live response,
+    and no deprecation policy page exists. The one deprecation AnnounceKit has
+    announced in the recent window was communicated as a changelog post, not as
+    a header or a policy - "We're ending support for older TLS versions (1.0 and
+    1.1)", published 2026-04-21. That is a real, dated, advance breaking-change
+    notice, and it is the mechanism in use.
+status_page:
+  url: https://status.announcekit.app/
+  http_status: 200
+  machine_readable: false
+  note: >-
+    A hosted status page is served. It is NOT Statuspage.io - /api/v2/status.json
+    returns 404 - so there is no documented machine-readable endpoint an agent
+    can poll for incident state.
+changelog:
+  url: https://changelog.announcekit.app/
+  feeds:
+  - {format: rss, url: 'https://changelog.announcekit.app/rss.xml', status: 200}
+  - {format: atom, url: 'https://changelog.announcekit.app/atom.xml', status: 200}
+  note: >-
+    AnnounceKit runs its own product on itself. The changelog is machine-readable
+    over RSS and Atom, which is the most consumable release signal the company
+    publishes. Detail in changelog/announcekit-changelog.yml.
+sla:
+  published: false
+  note: >-
+    No public SLA or uptime commitment. The pricing page lists "Custom contracts
+    & SLAs" as an Enterprise-tier item, so an SLA is negotiated rather than
+    published. The security page claims high availability without a number.
+support:
+  email: support@announcekit.app
+  help_center: https://help.announcekit.app
+  enterprise: Private Slack support channel and a dedicated account manager on Enterprise.
+data_lifecycle:
+  trial_expiry: >-
+    When the 15-day trial ends the project becomes read-only. Posts, widgets,
+    branding and settings are preserved and nothing is deleted; upgrading
+    restores write access.
+  deletion: >-
+    The schema exposes hard deletes and bulk purges (deleteAllPosts,
+    deleteAllExternalUsers, deleteAllNps, deleteAllFeatureRequests,
+    deleteAllRoadmapItems, deleteAllActivities, deleteAllKbContent) with no
+    documented retention or restore window. See the reversibility block in
+    conventions/announcekit-conventions.yml.
+  gdpr: >-
+    The GDPR page states support for data portability and deletion requests, and
+    a DPA is available.
+recent_lifecycle_events:
+- date: '2026-08-13'
+  event: Knowledge Base entered beta.
+  url: https://changelog.announcekit.app/knowledge-base-beta-is-here---want-in-j4YNy
+  note: >-
+    The knowledgeBase* fields are already live in the GraphQL schema but absent
+    from the MCP server, which shipped six weeks earlier.
+- date: '2026-07-02'
+  event: MCP server launched.
+  url: https://changelog.announcekit.app/the-announcekit-mcp-server-is-here-your-changelog-now-ships-itself-43MtP2
+- date: '2026-04-21'
+  event: End of support announced for TLS 1.0 and 1.1.
+  url: https://changelog.announcekit.app/were-ending-support-for-older-tls-versions-1.0-and-1.1-1ajjMI
+  breaking: true
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

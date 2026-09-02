@@ -1,0 +1,93 @@
+generated: '2026-09-02'
+method: probed
+source: >-
+  https://announcekit.app/docs/graphql-api for the documented RATE_LIMITED
+  envelope, plus live unauthenticated POSTs to https://announcekit.app/gq/v2 on
+  2026-09-02 that returned the validation and authorization envelopes verbatim.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit's error surface is the GraphQL errors array, not RFC 9457. There
+  is no OpenAPI to derive 4xx/5xx responses from and no published error
+  reference page. Two structurally different envelopes are in play, and the
+  difference matters to an agent: the rate-limit error carries a machine-
+  readable extensions.code, while ordinary validation and authorization errors
+  carry only a human-readable message string.
+format: graphql-errors
+rfc9457: false
+http_semantics:
+  note: >-
+    OBSERVED: the GraphQL endpoint returns HTTP 200 for errors. A field that
+    does not exist, and an authorization failure, both came back 200 with an
+    errors array. The single documented exception is the rate limit, which the
+    docs say returns 429. An agent that branches on HTTP status alone will read
+    an Access Denied as a success.
+  probed: '2026-09-02'
+problem_types:
+- code: RATE_LIMITED
+  http_status: 429
+  title: Too many requests
+  message: Too many requests. Please slow down.
+  machine_readable: true
+  extensions: [code, limit, remaining]
+  remediation: >-
+    Back off exponentially. Read X-RateLimit-Remaining before the next call. The
+    limit is 60 requests per minute per IP address and is shared by every
+    integration behind the same egress IP.
+  source: https://announcekit.app/docs/graphql-api
+- code: null
+  http_status: 200
+  title: Access denied
+  message: Access Denied.
+  machine_readable: false
+  fields: [message, locations, path]
+  observed:
+    request: '{"query":"{ posts(project_id: 1) { list { id } } }"}'
+    response: '{"errors":[{"message":"Access Denied.","locations":[{"line":1,"column":3}],"path":["posts"]}],"data":null}'
+    http_status: 200
+    fetched: '2026-09-02'
+  remediation: >-
+    Supply credentials (Basic auth header, ak_pat_ bearer token, or dashboard
+    cookies) and confirm the token's member has access to the project. There is
+    no extensions.code on this error, so it can only be matched on the literal
+    message string.
+- code: null
+  http_status: 200
+  title: Query validation failure
+  message: 'Cannot query field "<field>" on type "<Type>".'
+  machine_readable: false
+  fields: [message, locations]
+  observed:
+    request: '{"query":"{ nosuchfield }"}'
+    response: '{"errors":[{"message":"Cannot query field \"nosuchfield\" on type \"Query\".","locations":[{"line":1,"column":3}]}]}'
+    http_status: 200
+    fetched: '2026-09-02'
+  remediation: >-
+    Standard graphql-js validation error. Check the field against
+    graphql/announcekit-schema.graphql.
+- code: null
+  http_status: 200
+  title: Null-on-unauthenticated
+  message: null
+  machine_readable: false
+  observed:
+    request: '{"query":"{ me { id } }"}'
+    response: '{"data":{"me":null}}'
+    http_status: 200
+    fetched: '2026-09-02'
+  remediation: >-
+    Some fields do not error at all when unauthenticated - they resolve to null.
+    A client must null-check rather than rely on an errors array being present.
+gaps:
+- >-
+  AnnounceKit publishes no error reference page. RATE_LIMITED is the only error
+  code named anywhere in the documentation.
+- >-
+  Only the rate-limit error carries extensions.code. Every other error observed
+  is a bare message string, so programmatic error handling has to string-match.
+- >-
+  Errors are not returned with a distinguishing HTTP status, so transport-level
+  retry logic cannot see them.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

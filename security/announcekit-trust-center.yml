@@ -1,15 +1,77 @@
-generated: '2026-07-11'
+generated: '2026-09-02'
 method: searched
 probe: true
 source: https://announcekit.app/trust
 url: https://announcekit.app/trust
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit's trust posture. SOC 2 Type II and GDPR are both claimed on the
+  provider's own trust page, with an independently verified security report
+  published through Drata. Upgraded 2026-09-02 from a keyword-match record to
+  the named program detail on https://announcekit.app/trust and
+  https://announcekit.app/security.
 certifications:
-- SOC 2
-- GDPR
+- name: SOC 2 Type II
+  status: certified
+  scope: Security, Availability, and Confidentiality
+  auditor: Independently verified by a licensed CPA firm
+  report_availability: >-
+    Available to Enterprise customers who have signed an NDA. Requested through
+    an account executive or support@announcekit.app.
+  source: https://announcekit.app/trust
+- name: GDPR
+  status: compliant
+  detail: >-
+    Data processing agreement available, data portability supported, deletion
+    requests honored.
+  source: https://announcekit.app/gdpr-compliance
+trust_center:
+  platform: Drata
+  name: Drata Trust Center
+  linked_from: https://announcekit.app/trust
+  note: >-
+    AnnounceKit links out to a Drata-hosted security profile carrying compliance
+    status, controls and audit history, rather than hosting the evidence itself.
+documents:
+- {name: Data Processing Agreement, linked_from: 'https://announcekit.app/trust'}
+- {name: Privacy Policy, url: 'https://announcekit.app/privacy-policy', status: 200}
+- {name: Terms of Service, url: 'https://announcekit.app/terms-of-service', status: 200}
+- {name: Cookie Policy, linked_from: 'https://announcekit.app/trust'}
+- {name: Security Overview, url: 'https://announcekit.app/security', status: 200}
+- {name: SOC 2 page, url: 'https://announcekit.app/soc2', status: 200}
+- {name: GDPR Compliance, url: 'https://announcekit.app/gdpr-compliance', status: 200}
+controls:
+  infrastructure: Amazon Web Services, SOC 2 compliant providers
+  encryption_at_rest: AES-256
+  encryption_in_transit: 256-bit HTTPS; TLS 1.0 and 1.1 support ended (announced 2026-04-21)
+  payment_data: No direct access; handled by Stripe
+  access_control: [SAML 2.0 SSO, TOTP two-factor, RBAC (owner/manager/editor/viewer),
+    IP access control, audit log]
+  operational: [Automated software scanning and vulnerability remediation, Regular penetration
+    testing, SOC 2 incident response plan with a dedicated security team]
+  observed_headers:
+    url: https://announcekit.app/gq/v2
+    Strict-Transport-Security: max-age=31536000
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: strict-origin-when-cross-origin
+    fetched: '2026-09-02'
 evidence:
 - source: https://announcekit.app/trust
-  keywords:
-  - soc 2
-  - soc2
-  - trust center
-  - gdpr
+  http_status: 200
+  keywords: [soc 2 type ii, gdpr, dpa, drata, trust center]
+- source: https://announcekit.app/security
+  http_status: 200
+  keywords: [aes-256, penetration testing, saml sso, rbac, 2fa, ip access control, audit log]
+gaps:
+- >-
+  No public vulnerability disclosure program. No security.txt on
+  announcekit.app (404), no bug bounty on HackerOne, Bugcrowd or Intigriti, and
+  no disclosure policy page. The security page names penetration testing and an
+  incident response plan but gives a researcher no channel to report into.
+- >-
+  The SOC 2 report is gated behind an Enterprise contract plus an NDA, so the
+  certification cannot be independently verified from the public surface.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

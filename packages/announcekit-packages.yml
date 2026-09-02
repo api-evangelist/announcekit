@@ -1,0 +1,152 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  npm registry metadata (registry.npmjs.org), pub.dev API, CocoaPods trunk API
+  and the announcekitapp / announcekit GitHub organizations, cross-checked
+  against https://announcekit.app/docs and https://announcekit.app/llms.txt,
+  2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  First-party AnnounceKit client libraries. Two distinct families: the widget
+  SDK wrappers (React, Vue, Angular, React Native, iOS, Flutter) which embed the
+  in-app changelog widget, and announcekit-mcp, the Model Context Protocol
+  server that wraps the GraphQL API for AI clients. The widget wrappers are the
+  decay signal in this repo - every one of them last published in 2023-2025
+  while the GraphQL API and the MCP server shipped in 2026.
+packages:
+- name: announcekit-mcp
+  registry: npm
+  url: https://www.npmjs.com/package/announcekit-mcp
+  repository: https://github.com/announcekit/announcekit-mcp
+  language: TypeScript
+  official: true
+  version: 0.1.0
+  published: '2026-07-01'
+  description: >-
+    AnnounceKit MCP server. Connects Claude, ChatGPT, Cursor and other MCP
+    clients to AnnounceKit over the GraphQL API. Runs as stdio (npx
+    announcekit-mcp, Node 22+) or as the hosted HTTP endpoint. 29 tools; 15 read
+    tools with a read token, all 29 with a write token. No delete operations.
+- name: announcekit-react
+  registry: npm
+  url: https://www.npmjs.com/package/announcekit-react
+  repository: https://github.com/announcekitapp/announcekit-react
+  language: TypeScript
+  official: true
+  version: 3.2.0
+  published: '2023-01-18'
+  description: AnnounceKit widget component for React applications.
+- name: announcekit-vue
+  registry: npm
+  url: https://www.npmjs.com/package/announcekit-vue
+  repository: https://github.com/announcekitapp/announcekit-vue
+  language: Vue
+  official: true
+  version: 3.1.0
+  published: '2023-01-16'
+  description: AnnounceKit widget component for Vue applications.
+- name: announcekit-angular
+  registry: npm
+  url: https://www.npmjs.com/package/announcekit-angular
+  repository: https://github.com/announcekitapp/announcekit-angular
+  language: TypeScript
+  official: true
+  version: 14.0.5
+  published: '2023-02-22'
+  description: AnnounceKit widget wrapper for Angular 4+.
+- name: announcekit-react-native
+  registry: npm
+  url: https://www.npmjs.com/package/announcekit-react-native
+  repository: https://github.com/announcekitapp/announcekit-react-native
+  language: TypeScript
+  official: true
+  version: 2.0.7
+  published: '2024-01-29'
+  description: AnnounceKit widget wrapper for React Native apps.
+- name: announcekit_flutter
+  registry: pub.dev
+  url: https://pub.dev/packages/announcekit_flutter
+  repository: https://github.com/announcekitapp/announcekit-flutter
+  language: Dart
+  official: true
+  version: 0.1.0
+  published: '2025-03-28'
+  description: >-
+    Flutter SDK for the AnnounceKit widget. homepage announcekit.app, repository
+    under the announcekitapp GitHub org - first-party.
+- name: AnnounceKit
+  registry: cocoapods
+  url: https://cocoapods.org/pods/AnnounceKit
+  repository: https://github.com/announcekitapp/announcekit-ios-sdk
+  language: Swift
+  official: true
+  version: 0.10.2
+  published: '2024-10-28'
+  description: >-
+    iOS SDK for AnnounceKit, published to the CocoaPods trunk. Version and date
+    read from https://trunk.cocoapods.org/api/v1/pods/AnnounceKit.
+- name: announcekit-angularjs
+  registry: github
+  url: https://github.com/announcekitapp/announcekit-angularjs
+  repository: https://github.com/announcekitapp/announcekit-angularjs
+  language: JavaScript
+  official: true
+  version: null
+  published: null
+  note: >-
+    Source-only. No npm package under this name resolves; the repository was
+    last pushed 2020-09-30. Recorded with null version because there is no
+    registry metadata endpoint to query, not because it was unchecked.
+- name: announcekit-gtm-template
+  registry: github
+  url: https://github.com/announcekitapp/announcekit-gtm-template
+  repository: https://github.com/announcekitapp/announcekit-gtm-template
+  language: Smarty
+  official: true
+  version: null
+  published: null
+  note: >-
+    Google Tag Manager custom tag template. Distributed through the GTM
+    community template gallery, which exposes no version metadata endpoint;
+    repository last pushed 2022-03-04.
+- name: announcekit-segment-source
+  registry: github
+  url: https://github.com/announcekitapp/announcekit-segment-source
+  repository: https://github.com/announcekitapp/announcekit-segment-source
+  language: JavaScript
+  official: true
+  version: null
+  published: null
+  note: >-
+    Segment source integration, source-only, no package registry. Repository
+    last pushed 2021-11-25.
+excluded:
+- name: announcekit
+  registry: npm
+  reason: >-
+    npm name squat. Version 1.0.0 published 2019-07-27 with an empty description
+    and no repository; not published by AnnounceKit LLC. NOT recorded as an
+    AnnounceKit package.
+- name: react-native-announcekit
+  registry: npm
+  reason: >-
+    Third-party. Published from github.com/lvqviet/react-native-announcekit with
+    the description "test". The first-party React Native wrapper is
+    announcekit-react-native.
+- name: announcekit (WordPress plugin)
+  registry: wordpress.org
+  reason: >-
+    AnnounceKit documents a WordPress integration
+    (https://announcekit.app/docs/wordpress) but
+    api.wordpress.org/plugins/info/1.0/announcekit.json returns 404 - no plugin
+    is published under that slug on the WordPress.org directory.
+currency_note: >-
+  Every version and published date above was read from the registry's own
+  metadata endpoint on 2026-09-02, except the three GitHub-only entries which
+  have no registry and are recorded as null with a note. The widget SDK family
+  has not shipped a release since 2025-03-28 (Flutter) / 2024-10-28 (iOS), while
+  announcekit-mcp is the only 2026 release.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

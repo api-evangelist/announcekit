@@ -1,0 +1,230 @@
+generated: '2026-09-02'
+method: derived
+source: >-
+  Derived from the live introspected GraphQL schema
+  (graphql/announcekit-schema.graphql, https://announcekit.app/gq/v2,
+  2026-09-02), the announcekit-mcp 0.1.0 package, and searched against
+  https://announcekit.app/docs/graphql-api,
+  https://help.announcekit.app/en/articles/5813203-webhooks-integration and
+  https://announcekit.app/pricing.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  Cross-cutting runtime semantics for the AnnounceKit GraphQL API and its MCP
+  server. AnnounceKit publishes no conventions document; this is assembled from
+  the schema's own shapes and the two documentation pages that state runtime
+  behaviour.
+auth_style:
+  primary: HTTP Basic on the GraphQL endpoint
+  agent: 'Authorization: Bearer ak_pat_... or OAuth 2.0 authorization code + PKCE'
+  detail: authentication/announcekit-authentication.yml
+idempotency:
+  supported: false
+  grade: absent
+  detail: >-
+    No idempotency key header, no request-id de-duplication and no client-token
+    argument appears anywhere in the schema or the documentation. The write
+    mutations are shaped as upserts instead: savePost, saveFeatureRequest,
+    saveIssue, saveStatus, saveLabel and savePostTemplate all take an optional
+    id argument and create when it is absent, update when it is present. That
+    makes a repeated call with the SAME id safe, but a retried create with no id
+    produces a duplicate. An agent retrying a failed create_post has no way to
+    tell whether the first attempt landed.
+  upsert_mutations: [savePost, saveFeatureRequest, saveIssue, saveStatus, saveLabel,
+    savePostTemplate, saveWidget, saveProjectWebhook]
+pagination:
+  style: offset-page
+  request_param: page
+  request_type: Int
+  response_fields: [page, pages, count]
+  collection_fields:
+  - {type: Posts, items_field: list}
+  - {type: FeatureRequests, items_field: list}
+  - {type: Issues, items_field: list}
+  - {type: RoadmapItems, items_field: list}
+  - {type: PageOfActivities, items_field: items}
+  - {type: PageOfFeedback, items_field: items}
+  - {type: PageOfExternalUsers, items_field: items}
+  - {type: PageOfAuditlog, items_field: items}
+  detail: >-
+    Simple 1-based page numbering. No cursor, no limit/offset, no page-size
+    argument - page size is fixed server-side and is not documented. Two naming
+    conventions coexist for the item array (list vs items) depending on the
+    wrapper type, which a generic client has to special-case.
+  inconsistency: >-
+    The item array is called `list` on Posts, FeatureRequests, Issues and
+    RoadmapItems, and `items` on the PageOf* types. Same pagination envelope,
+    two field names.
+filtering_and_sorting:
+  sort_enums: [FeatureRequestSortBy (TOP, TRENDING, NEW), SortOrder (ASC, DESC),
+    ExternalUserSortField (SEEN_AT, NAME)]
+  free_text: 'posts(query:), activities(search:), featureRequests(query: FeatureRequestQuery)'
+  note: >-
+    Several filter arguments are typed as the JSONObject scalar
+    (segment_filters, filters, fields, user_filter, segmentProfile), which means
+    their accepted shape is invisible to introspection and undocumented. This is
+    the single largest legibility gap in the contract.
+field_selection:
+  style: native-graphql
+  detail: >-
+    Sparse fieldsets and expansion are inherent to GraphQL - the caller names
+    the fields and traverses relationships in one round trip. No separate
+    expand/fields parameter exists or is needed.
+metadata:
+  supported: partial
+  detail: >-
+    There is no generic metadata bag. Free-form data rides on JSONObject fields
+    scoped to specific concerns: Post.segment_filters, Post.view_data,
+    Widget.options, Widget.theme, Nps.options, FeatureRequest.segment_filters.
+request_tracing:
+  supported: false
+  detail: >-
+    No request-id or correlation-id header is documented and none was returned
+    on a live response. The observed response headers were Content-Type, Date,
+    Referrer-Policy, Strict-Transport-Security, Vary, X-Content-Type-Options,
+    X-RateLimit-Limit and X-RateLimit-Remaining - no trace identifier among
+    them. An agent cannot quote a request id when reporting a failure to
+    support@announcekit.app.
+versioning:
+  style: path
+  current: /gq/v2
+  detail: >-
+    The version lives in the endpoint path (https://announcekit.app/gq/v2). No
+    header-based or date-based versioning, no version negotiation, and no
+    published policy for what a v3 would mean. The MCP server exposes the path
+    as the ANNOUNCEKIT_GRAPHQL_PATH environment variable, defaulting to /gq/v2.
+error_envelope:
+  format: graphql-errors
+  fields: [message, locations, path, extensions]
+  http_status: 200 for most errors, 429 for rate limiting
+  detail: errors/announcekit-problem-types.yml
+rate_limit_signaling:
+  headers: [X-RateLimit-Limit, X-RateLimit-Remaining]
+  status: 429
+  code: RATE_LIMITED
+  detail: rate-limits/announcekit-rate-limits.yml
+dry_run_mode:
+  supported: partial
+  grade: documented
+  detail: >-
+    There is no dry_run or validate-only flag. The closest equivalent is the
+    draft state: savePost defaults to is_draft true, so a post can be created
+    and inspected before anything is published to readers. The query previewPost
+    renders a post without publishing it. This rehearses the visible outcome of
+    a publish but not the write itself - the draft is a real persisted record.
+reversibility:
+  grade: documented
+  credit: 0.4
+  summary: >-
+    Every write surface has a reversal path in the schema, and none of them has
+    a documented window. AnnounceKit publishes no retention, undo or grace
+    period for any operation, so the reversal is recorded as available but
+    unbounded-unknown. NOTE the agent-specific hazard: the MCP server exposes
+    NO delete tools at all, so an agent can create and publish through
+    mcp.announcekit.app but cannot reverse most of what it did without a human
+    opening the dashboard or calling the GraphQL API directly.
+  surfaces:
+  - action: Publish a post
+    forward: savePost (is_draft false) / MCP publish_post
+    reversal: savePost with is_draft true - the post.unpublish webhook event
+      confirms unpublishing is a first-class state transition
+    reversal_operation: savePost
+    agent_reversible: false
+    window: null
+    window_documented: false
+    note: >-
+      Reversible in the API. NOT reversible by an agent - there is no
+      unpublish_post tool on the MCP server. Readers who already received the
+      email, Slack or in-app notification for a published post are not recalled
+      by unpublishing; nothing in the docs claims otherwise.
+  - action: Create a post
+    forward: savePost / MCP create_post
+    reversal: deletePost
+    reversal_operation: deletePost
+    agent_reversible: false
+    window: null
+    window_documented: false
+    note: >-
+      deletePost returns Boolean and is a hard delete; no trash, restore or
+      retention period is documented. Not exposed to agents.
+  - action: Schedule a post
+    forward: savePost with a future visible_at / MCP schedule_post
+    reversal: savePost with a different or cleared visible_at, or is_draft true
+    reversal_operation: savePost
+    agent_reversible: true
+    window: Until visible_at is reached
+    window_documented: partial
+    note: >-
+      The reversal window here is the only one with a real boundary, and it is
+      structural rather than stated in prose - a scheduled post can be changed
+      until it goes live. Posts also carry expire_at, which self-reverses
+      visibility at a chosen time.
+  - action: Create or update a feature request
+    forward: saveFeatureRequest / MCP create_feature_request
+    reversal: deleteFeatureRequest, or saveFeatureRequest with is_archived true
+    reversal_operation: deleteFeatureRequest
+    agent_reversible: false
+    window: null
+    window_documented: false
+    note: Archiving is the soft path and is reversible; deletion is not documented as reversible.
+  - action: Comment on or reply to a feature request
+    forward: commentFeatureRequest, replyFeatureRequest / MCP comment_feature_request, reply_feature_request
+    reversal: deleteFeatureRequestComment
+    reversal_operation: deleteFeatureRequestComment
+    agent_reversible: false
+    window: null
+    window_documented: false
+    note: >-
+      replyFeatureRequest notifies the request's subscribers. Deleting the reply
+      afterwards does not unsend those notifications, and no docs claim it does.
+  - action: Create a roadmap item or status column
+    forward: saveIssue, saveStatus / MCP create_roadmap_item, create_roadmap_status
+    reversal: deleteIssue, deleteStatus
+    reversal_operation: deleteIssue
+    agent_reversible: false
+    window: null
+    window_documented: false
+  - action: Bulk data operations
+    forward: n/a
+    reversal: none
+    reversal_operation: null
+    agent_reversible: false
+    window: null
+    window_documented: false
+    note: >-
+      deleteAllPosts, deleteAllExternalUsers, deleteAllNps, deleteAllFeatureRequests,
+      deleteAllRoadmapItems, deleteAllActivities, deleteAllInAppMessages and
+      deleteAllKbContent exist in the schema with NO documented reversal, export
+      or retention. The schema also carries a dangerZonePresence query, which
+      suggests the dashboard gates these behind a confirmation UI. They are not
+      exposed to agents.
+  - action: Subscription cancellation
+    forward: cancelSubscription
+    reversal: ensureSubscription / beginPaddleSubscription
+    reversal_operation: ensureSubscription
+    agent_reversible: false
+    window: null
+    window_documented: partial
+    note: >-
+      The pricing page states a 7-day refund policy on all plans, which is a
+      documented commercial reversal window; it is not tied to an API operation.
+  missing_documentation:
+  - >-
+    No retention or restore window is stated for ANY delete operation. An agent
+    (or a human) cannot learn from the documentation whether a deleted post is
+    recoverable at all, and the mutation returns a bare Boolean.
+  - >-
+    No documented statement about whether unpublishing a post recalls or
+    suppresses already-delivered email, Slack, RSS or in-app notifications. This
+    is the highest-consequence unknown on the write surface, because the whole
+    product is delivery.
+cross_references:
+  errors: errors/announcekit-problem-types.yml
+  lifecycle: lifecycle/announcekit-lifecycle.yml
+  authentication: authentication/announcekit-authentication.yml
+  rate_limits: rate-limits/announcekit-rate-limits.yml
+  scopes: scopes/announcekit-scopes.yml
+  webhooks: asyncapi/announcekit-webhooks.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

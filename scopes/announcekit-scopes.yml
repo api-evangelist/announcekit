@@ -1,0 +1,51 @@
+generated: '2026-09-02'
+method: probed
+source: >-
+  scopes_supported read from the live RFC 8414 document at
+  https://announcekit.app/.well-known/oauth-authorization-server (HTTP 200,
+  fetched 2026-09-02), with descriptions taken verbatim from
+  https://help.announcekit.app/en/articles/15827230-mcp-server-connect-your-ai-assistant-to-announcekit
+  and the announcekit-mcp 0.1.0 README.
+docs: https://help.announcekit.app/en/articles/15827230-mcp-server-connect-your-ai-assistant-to-announcekit
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit runs a two-scope authorization model. It is unusually legible for
+  its size: the scope list is machine-discoverable from the authorization server
+  metadata, and the vendor publishes exactly which tools each scope unlocks.
+issuer: https://announcekit.app
+authorization_endpoint: https://announcekit.app/oauth/authorize
+token_endpoint: https://announcekit.app/oauth/token
+registration_endpoint: https://announcekit.app/oauth/register
+code_challenge_methods_supported: [S256]
+scope_count: 2
+scopes:
+- name: read
+  description: >-
+    Queries only. View posts, feedback, stats and roadmap. Exposes the 15 read
+    tools on the MCP server.
+  grants:
+  - MCP tools list_projects, list_labels, list_posts, get_post, list_post_templates,
+    get_post_stats, get_post_status_summary, list_feedback, list_activities, get_nps,
+    list_segments, list_external_users, list_feeds, list_feature_requests, list_roadmap
+- name: write
+  description: >-
+    Read, plus create and update content. No deletes. Exposes all 29 MCP tools.
+  grants:
+  - Everything in read
+  - MCP tools save_label, create_post, update_post, publish_post, schedule_post,
+    update_post_locale, save_post_template, generate_post_draft, improve_text,
+    create_feature_request, comment_feature_request, reply_feature_request,
+    create_roadmap_item, create_roadmap_status
+constraints:
+- >-
+  Scope is not the only boundary. A token also inherits the project access and
+  the ProjectRole (owner, manager, editor, viewer) of the member who created it,
+  and stops working on a project that member loses access to. The effective
+  permission is the intersection of scope and role.
+- >-
+  No scope grants deletion, billing or account administration on any surface -
+  those are not represented in the scope model at all.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -4,92 +4,106 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: AnnounceKit
 providerId: announcekit
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-02'
+generated: '2026-09-02'
+method: probed
+source: >-
+  https://announcekit.app/docs/graphql-api, confirmed against a live
+  unauthenticated POST to https://announcekit.app/gq/v2 on 2026-09-02 whose
+  response headers carried X-RateLimit-Limit: 60 and X-RateLimit-Remaining: 56.
+observed:
+  url: https://announcekit.app/gq/v2
+  method: POST
+  http_status: 200
+  fetched: '2026-09-02'
+  headers_returned:
+    X-RateLimit-Limit: '60'
+    X-RateLimit-Remaining: '56'
+    Strict-Transport-Security: max-age=31536000
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: strict-origin-when-cross-origin
+  note: >-
+    The documented 60/minute ceiling is real and the two rate-limit headers are
+    genuinely emitted on every response, including unauthenticated ones. No
+    reset or Retry-After header was present.
+description: >-
+  AnnounceKit's published rate limit for the GraphQL API. This file REPLACES a
+  2026-05-04 bulk-sweep scaffold that invented per-tier quotas (10/100/1000 rpm,
+  1k/100k monthly) which AnnounceKit does not publish and does not operate. The
+  real limit is a single IP-based ceiling that does not vary by plan.
 tags:
-  - Changelog
-  - Feature Requests
-  - NPS
-  - Notifications
-  - Product Communication
-  - Roadmap
-  - SaaS
-  - Widgets
-  - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the AnnounceKit API surface. Captures per-tier
-  quotas, burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to
-  be replaced with published provider limits.
+- Rate Limiting
+- Quotas
+- Throttling
+- GraphQL
+limit_count: 1
 headers:
   limit: X-RateLimit-Limit
   remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  note: >-
+    Only these two headers are documented. AnnounceKit does NOT document a
+    reset header, a RateLimit-Policy header, or Retry-After - so an agent can
+    see how much budget is left but cannot learn when the window rolls over
+    except by waiting.
 responseCodes:
   throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
+errorEnvelope:
+  format: graphql-errors
+  example: |
+    {
+      "errors": [{
+        "message": "Too many requests. Please slow down.",
+        "extensions": {
+          "code": "RATE_LIMITED",
+          "limit": 60,
+          "remaining": 0
+        }
+      }]
+    }
+  note: >-
+    The 429 body is a GraphQL error envelope, not RFC 9457. The machine-readable
+    signal is extensions.code = RATE_LIMITED, with limit and remaining repeated
+    in the extensions object.
 limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - AnnounceKit API
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - AnnounceKit API
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - AnnounceKit API
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - AnnounceKit API
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - AnnounceKit API
+- name: GraphQL API default
+  scope: ip-address
+  metric: requests_per_minute
+  limit: 60
+  timeFrame: minute
+  applies:
+  - AnnounceKit GraphQL API
+  endpoint: https://announcekit.app/gq/v2
+  source: https://announcekit.app/docs/graphql-api
+  note: >-
+    "By default, the API allows 60 requests per minute per IP address." Verbatim
+    from the API reference. The limit is per IP, not per key or per account, so
+    it is shared by every integration calling from the same egress address.
 policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+- name: Backoff
+  description: >-
+    AnnounceKit's stated best practice: monitor X-RateLimit-Remaining, and
+    implement exponential backoff on a 429.
+  source: https://announcekit.app/docs/graphql-api
+- name: Caching
+  description: Cache responses where possible to reduce call volume.
+  source: https://announcekit.app/docs/graphql-api
+- name: Dashboard exemption
+  description: >-
+    The docs say "use authenticated requests from the official dashboard for
+    unlimited access" - the IP limit is aimed at programmatic clients.
+  source: https://announcekit.app/docs/graphql-api
+gaps:
+- >-
+  No per-plan, per-key or per-account limits are published. The Essentials,
+  Growth, Scale and Enterprise tiers are not distinguished by any documented API
+  quota - the pricing page markets "unlimited posts, visitors and subscribers"
+  but says nothing about API call volume.
+- >-
+  No documented limit for the hosted MCP endpoint (https://mcp.announcekit.app/mcp)
+  separate from the GraphQL limit it proxies.
+- >-
+  No reset header and no Retry-After, so a throttled client cannot compute when
+  to retry.
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

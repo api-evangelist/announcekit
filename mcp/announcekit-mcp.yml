@@ -1,0 +1,246 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://announcekit.app/docs/mcp,
+  https://help.announcekit.app/en/articles/15827230-mcp-server-connect-your-ai-assistant-to-announcekit,
+  https://announcekit.app/llms.txt, the published npm package announcekit-mcp
+  0.1.0 (README + dist/tools/), and direct probes of
+  https://mcp.announcekit.app/mcp and its /.well-known/oauth-protected-resource,
+  2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+name: AnnounceKit MCP Server
+description: >-
+  AnnounceKit publishes a first-party Model Context Protocol server that wraps
+  its GraphQL API. It ships two ways from one codebase: a hosted Streamable-HTTP
+  endpoint an agent can call today, and an npx-installable stdio server for
+  local use. 29 tools, deliberately read + create/update only - there are no
+  delete, account or billing tools, which stay dashboard-only by design.
+deployment:
+  mode: both
+  endpoint: https://mcp.announcekit.app/mcp
+  install: npx announcekit-mcp
+  package: https://www.npmjs.com/package/announcekit-mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    The hosted endpoint is the primary surface and is what the docs recommend
+    ("nothing to install"). It accepts either the OAuth login/approval flow
+    (RFC 8414 metadata on announcekit.app, RFC 9728 resource metadata on
+    mcp.announcekit.app, PKCE S256, dynamic client registration) or an
+    Authorization: Bearer ak_pat_ token. The stdio variant is the same server
+    reading its token from ANNOUNCEKIT_TOKEN; it requires Node 22+.
+transport: streamable-http
+protocol: Model Context Protocol
+probe:
+  url: https://mcp.announcekit.app/mcp
+  method: POST
+  body: '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+  http_status: 401
+  response: >-
+    {"jsonrpc":"2.0","error":{"code":-32001,"message":"Missing or invalid
+    Authorization: Bearer token"},"id":null}
+  fetched: '2026-09-02'
+  note: >-
+    Live tools/list and initialize are auth-gated, so the tool inventory below
+    was NOT taken from a live introspection. It was read from AnnounceKit's own
+    published npm package announcekit-mcp 0.1.0 - the same server binary that
+    backs the hosted endpoint - which is a first-party source, not a guess.
+    Input parameter names are the zod schema keys in dist/tools/*.js. Full
+    inputSchema types still need an authenticated tools/list.
+authentication:
+  hosted:
+    flows:
+    - name: oauth2-authorization-code-pkce
+      authorization_endpoint: https://announcekit.app/oauth/authorize
+      token_endpoint: https://announcekit.app/oauth/token
+      registration_endpoint: https://announcekit.app/oauth/register
+      code_challenge_methods: [S256]
+      scopes: [read, write]
+    - name: bearer-token
+      header: 'Authorization: Bearer ak_pat_...'
+  local:
+    env: ANNOUNCEKIT_TOKEN
+    token_prefix: ak_pat_
+  token_model: >-
+    A token acts on behalf of the member who created it and is limited to the
+    projects that member can access, at that member's role. If the member loses
+    access to a project, the token stops working there. Each user may hold up to
+    10 connected apps.
+scopes:
+- name: read
+  description: Queries only - exposes the 15 read tools.
+- name: write
+  description: >-
+    Read plus create and update - exposes all 29 tools. Still no deletes.
+configuration:
+  env:
+  - name: ANNOUNCEKIT_TOKEN
+    required: true
+    description: The ak_pat_ access token.
+  - name: ANNOUNCEKIT_API_URL
+    required: false
+    default: https://announcekit.app
+  - name: ANNOUNCEKIT_GRAPHQL_PATH
+    required: false
+    default: /gq/v2
+tool_count: 29
+read_tool_count: 15
+write_tool_count: 14
+tools:
+- name: list_projects
+  title: List Projects
+  scope: read
+  category: projects
+  inputs: []
+- name: list_labels
+  title: List Labels
+  scope: read
+  category: labels
+  inputs: [project_id]
+- name: list_posts
+  title: List Posts
+  scope: read
+  category: posts
+  inputs: [project_id, page, query]
+- name: get_post
+  title: Get Post
+  scope: read
+  category: posts
+  inputs: [project_id, post_id]
+- name: list_post_templates
+  title: List Post Templates
+  scope: read
+  category: posts
+  inputs: [project_id]
+- name: get_post_stats
+  title: Post Statistics
+  scope: read
+  category: analytics
+  inputs: [project_id, post_id, start_date, end_date]
+- name: get_post_status_summary
+  title: Post Status Summary
+  scope: read
+  category: analytics
+  inputs: [project_id, start_date, end_date]
+- name: list_feedback
+  title: List Feedback
+  scope: read
+  category: feedback
+  inputs: [project_id, post_id, page]
+- name: list_activities
+  title: List Activities
+  scope: read
+  category: analytics
+  inputs: [project_id, post_id, page]
+- name: get_nps
+  title: Get NPS Metrics
+  scope: read
+  category: nps
+  inputs: [project_id, post_id]
+- name: list_segments
+  title: List Segments
+  scope: read
+  category: segmentation
+  inputs: [project_id]
+- name: list_external_users
+  title: List Audience
+  scope: read
+  category: audience
+  inputs: [project_id, page]
+- name: list_feeds
+  title: List Feeds
+  scope: read
+  category: feeds
+  inputs: [project_id]
+- name: list_feature_requests
+  title: List Feature Requests
+  scope: read
+  category: feature-requests
+  inputs: [project_id, sort_by, page]
+- name: list_roadmap
+  title: List Roadmap
+  scope: read
+  category: roadmap
+  inputs: [project_id, page]
+- name: save_label
+  title: Save Label
+  scope: write
+  category: labels
+  inputs: [project_id, label_id, name, color, applies_to_posts, applies_to_feature_requests, applies_to_roadmap]
+- name: create_post
+  title: Create Post
+  scope: write
+  category: posts
+  inputs: [project_id, title, body, summary, labels, locale, is_draft, visible_at]
+- name: update_post
+  title: Update Post
+  scope: write
+  category: posts
+  inputs: [project_id, post_id, title, body, summary, labels, is_pinned, visible_at, expire_at]
+- name: publish_post
+  title: Publish Post
+  scope: write
+  category: posts
+  inputs: [project_id, post_id]
+- name: schedule_post
+  title: Schedule Post
+  scope: write
+  category: posts
+  inputs: [project_id, post_id]
+- name: update_post_locale
+  title: Update Post Locale
+  scope: write
+  category: posts
+  inputs: [project_id, post_id, locale, title, body]
+- name: save_post_template
+  title: Save Post Template
+  scope: write
+  category: posts
+  inputs: [project_id, post_template_id, title, body]
+- name: generate_post_draft
+  title: Generate Post Draft (AI)
+  scope: write
+  category: ai
+  inputs: [project_id, locale, tone]
+- name: improve_text
+  title: Improve Text (AI)
+  scope: write
+  category: ai
+  inputs: [project_id, text]
+- name: create_feature_request
+  title: Create Feature Request
+  scope: write
+  category: feature-requests
+  inputs: [project_id, feature_request_id, title, summary, labels, locale, issue_id, is_internal, is_approved]
+- name: comment_feature_request
+  title: Comment on Feature Request
+  scope: write
+  category: feature-requests
+  inputs: [project_id, feature_request_id, content, status]
+- name: reply_feature_request
+  title: Reply to Feature Request
+  scope: write
+  category: feature-requests
+  inputs: [project_id, feature_request_id, subject, content]
+- name: create_roadmap_item
+  title: Create Roadmap Item
+  scope: write
+  category: roadmap
+  inputs: [project_id, issue_id, status_id, title, summary, labels, due_at]
+- name: create_roadmap_status
+  title: Create Roadmap Status
+  scope: write
+  category: roadmap
+  inputs: [project_id, status_id, name, color]
+excluded_capabilities:
+- Delete operations of any kind (posts, feature requests, roadmap items, labels,
+  projects) are intentionally absent from the server.
+- Account, subscription and billing mutations are absent.
+clients_documented:
+- Claude (claude.ai, Claude Desktop, Claude Code)
+- Cursor
+- ChatGPT (Developer Mode)
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

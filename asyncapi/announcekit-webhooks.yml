@@ -1,0 +1,82 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://help.announcekit.app/en/articles/5813203-webhooks-integration (event
+  names, verbatim), https://announcekit.app/docs/graphql-api and the introspected
+  GraphQL schema (ProjectWebhook type, saveProjectWebhook /
+  removeProjectWebhook mutations), 2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit's event surface is webhooks only. No AsyncAPI document is
+  published and none was found on any host - this file is the webhook catalog,
+  not a fabricated AsyncAPI. Events are delivered in real time as HTTP POST
+  requests to a URL configured per project under Settings > Integrations.
+asyncapi_published: false
+asyncapi_probe:
+  note: >-
+    /asyncapi.yaml, /asyncapi.json and an event-catalog page were not found;
+    neither the docs, the help center nor either GitHub organization publishes
+    an AsyncAPI document. Recorded as an honest absence.
+transport: http
+delivery: HTTP POST to a subscriber-supplied URL
+configuration:
+  ui: Settings > Integrations > add webhook URL
+  api:
+    graphql_query: projectWebhooks
+    graphql_mutations: [saveProjectWebhook, removeProjectWebhook]
+    fields: [id, project_id, is_enabled, url]
+    note: >-
+      Webhook endpoints are managed through the GraphQL API as well as the
+      dashboard. They are NOT exposed through the MCP server.
+event_count: 11
+events:
+- name: post.create
+  domain: posts
+  description: A post (announcement) was created.
+- name: post.update
+  domain: posts
+  description: An existing post was edited.
+- name: post.publish
+  domain: posts
+  description: A post went live.
+- name: post.unpublish
+  domain: posts
+  description: A live post was taken back out of publication.
+- name: post.feedback
+  domain: feedback
+  description: A reader left feedback on a post.
+- name: post.reaction
+  domain: feedback
+  description: A reader reacted to a post.
+- name: project.subscribe
+  domain: audience
+  description: A user subscribed to the project's updates.
+- name: project.unsubscribe
+  domain: audience
+  description: A user unsubscribed from the project's updates.
+- name: featurerequest.create
+  domain: feature-requests
+  description: A feature request was created.
+- name: featurerequest.upvote
+  domain: feature-requests
+  description: A feature request received an upvote.
+- name: featurerequest.comment
+  domain: feature-requests
+  description: A comment was added to a feature request.
+gaps:
+- >-
+  AnnounceKit does not publish the webhook payload schema. The help center lists
+  the event names and the delivery mechanism but shows no example body, no field
+  reference and no per-event schema. A consumer has to receive a live event to
+  learn its shape.
+- >-
+  No signing secret, signature header or replay-protection scheme is documented.
+  The ProjectWebhook GraphQL type carries only id, project_id, is_enabled and
+  url - there is no secret field in the schema, which is consistent with the
+  docs saying nothing about verification.
+- >-
+  No documented retry or redelivery policy.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

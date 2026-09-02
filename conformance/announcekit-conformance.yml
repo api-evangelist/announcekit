@@ -1,0 +1,207 @@
+generated: '2026-09-02'
+method: probed
+source: >-
+  Live probes of https://announcekit.app/.well-known/oauth-authorization-server
+  (200), https://mcp.announcekit.app/.well-known/oauth-protected-resource (200),
+  https://mcp.announcekit.app/mcp (401), https://announcekit.app/gq/v2 (200
+  introspection), plus https://announcekit.app/security,
+  https://announcekit.app/trust and https://announcekit.app/gdpr-compliance,
+  2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  Cross-cutting standards conformance for AnnounceKit. The notable result is
+  that the newest surface is the most standards-conformant one: the MCP server's
+  authorization stack implements four IETF OAuth RFCs correctly and advertises
+  itself, while the older GraphQL API implements almost no cross-cutting HTTP
+  standards at all.
+conformance:
+- id: graphql
+  name: GraphQL over HTTP
+  conforms: true
+  evidence:
+    url: https://announcekit.app/gq/v2
+    http_status: 200
+    detail: >-
+      Single POST endpoint returning application/json. Full introspection
+      succeeds unauthenticated and returns 179 types, 93 Query fields and 150
+      Mutation fields. Standard graphql-js validation errors. Schema saved to
+      graphql/announcekit-schema.graphql.
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence:
+    url: https://mcp.announcekit.app/mcp
+    http_status: 401
+    detail: >-
+      Streamable HTTP transport. A JSON-RPC 2.0 tools/list POST returned a
+      well-formed JSON-RPC error object ({"jsonrpc":"2.0","error":{"code":-32001,
+      "message":"Missing or invalid Authorization: Bearer token"},"id":null}),
+      i.e. the server speaks the protocol and is auth-gated rather than absent.
+      29 tools published in the vendor's own package.
+- id: oauth2
+  name: OAuth 2.0 authorization code
+  conforms: true
+  evidence:
+    url: https://announcekit.app/.well-known/oauth-authorization-server
+    http_status: 200
+    detail: >-
+      grant_types_supported [authorization_code, refresh_token],
+      response_types_supported [code].
+- id: rfc8414
+  name: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  conforms: true
+  evidence:
+    url: https://announcekit.app/.well-known/oauth-authorization-server
+    http_status: 200
+    detail: Served as JSON with issuer, authorization_endpoint, token_endpoint, registration_endpoint, scopes_supported.
+- id: rfc9728
+  name: RFC 9728 OAuth 2.0 Protected Resource Metadata
+  conforms: true
+  evidence:
+    url: https://mcp.announcekit.app/.well-known/oauth-protected-resource
+    http_status: 200
+    detail: '{"resource":"https://mcp.announcekit.app/mcp","authorization_servers":["https://announcekit.app"]}'
+- id: rfc7636
+  name: RFC 7636 PKCE
+  conforms: true
+  evidence:
+    url: https://announcekit.app/.well-known/oauth-authorization-server
+    http_status: 200
+    detail: 'code_challenge_methods_supported: [S256], token_endpoint_auth_methods_supported: [none] - a public client using PKCE.'
+- id: rfc7591
+  name: RFC 7591 Dynamic Client Registration
+  conforms: true
+  evidence:
+    url: https://announcekit.app/.well-known/oauth-authorization-server
+    http_status: 200
+    detail: 'registration_endpoint: https://announcekit.app/oauth/register is advertised, which is what lets an MCP client self-register without a manual app setup.'
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence:
+    url: https://announcekit.app/.well-known/openid-configuration
+    http_status: 404
+    detail: >-
+      No OIDC discovery document. AnnounceKit is an OAuth authorization server
+      for its own API, not an identity provider. It CONSUMES SAML 2.0 for
+      dashboard SSO rather than issuing OIDC.
+- id: saml2
+  name: SAML 2.0 (as service provider)
+  conforms: true
+  evidence:
+    url: https://announcekit.app/security
+    http_status: 200
+    detail: >-
+      SAML 2.0 SSO on Scale and Enterprise plans, backed by the SAMLConfig type
+      and samlConfig / samlLoginURL / saveSamlConfig / verifySamlDomain in the
+      live schema.
+- id: rfc9457
+  name: RFC 9457 Problem Details
+  conforms: false
+  evidence:
+    url: https://announcekit.app/gq/v2
+    http_status: 200
+    detail: >-
+      Errors are returned in the GraphQL errors array with content-type
+      application/json, not application/problem+json. Only the rate-limit error
+      carries a machine-readable extensions.code.
+- id: rfc8594
+  name: RFC 8594 Sunset header
+  conforms: false
+  evidence:
+    url: https://announcekit.app/gq/v2
+    http_status: 200
+    detail: >-
+      No Sunset or Deprecation header observed on a live response, and no
+      deprecation policy is published. Breaking changes are announced in the
+      product changelog instead.
+- id: ietf-ratelimit-headers
+  name: IETF RateLimit header fields (draft)
+  conforms: false
+  evidence:
+    url: https://announcekit.app/gq/v2
+    http_status: 200
+    detail: >-
+      AnnounceKit emits the legacy X-RateLimit-Limit and X-RateLimit-Remaining
+      (observed on a live response), not the standard-track RateLimit /
+      RateLimit-Policy fields, and no reset field at all.
+- id: idempotency-key
+  name: Idempotency-Key header
+  conforms: false
+  evidence:
+    url: https://announcekit.app/docs/graphql-api
+    http_status: 200
+    detail: No idempotency key, request token or de-duplication mechanism in the schema or the docs.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence:
+    url: https://announcekit.app/docs/graphql-api
+    http_status: 200
+    detail: >-
+      11 webhook events are documented by name but no AsyncAPI document, payload
+      schema or signature scheme is published. See asyncapi/announcekit-webhooks.yml.
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence:
+    url: https://announcekit.app/openapi.json
+    http_status: 404
+    detail: >-
+      /openapi.json, /openapi.yaml, /swagger.json and /api-docs all 404 on
+      announcekit.app. GraphQL is the contract; there is no REST surface to
+      describe.
+- id: hsts
+  name: HTTP Strict Transport Security
+  conforms: true
+  evidence:
+    url: https://announcekit.app/gq/v2
+    http_status: 200
+    detail: 'Strict-Transport-Security: max-age=31536000 observed on a live API response, alongside X-Content-Type-Options: nosniff and Referrer-Policy: strict-origin-when-cross-origin.'
+- id: soc2
+  name: SOC 2 Type II
+  conforms: true
+  evidence:
+    url: https://announcekit.app/trust
+    http_status: 200
+    detail: >-
+      SOC 2 Type II audit completed and independently verified by a licensed CPA
+      firm; report available to Enterprise customers under NDA. Security profile
+      published on a Drata trust center.
+- id: gdpr
+  name: GDPR
+  conforms: true
+  evidence:
+    url: https://announcekit.app/gdpr-compliance
+    http_status: 200
+    detail: DPA available, data portability and deletion requests supported.
+- id: rfc9116
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence:
+    url: https://announcekit.app/.well-known/security.txt
+    http_status: 404
+    detail: >-
+      No security.txt on announcekit.app or mcp.announcekit.app. The 200 on
+      help.announcekit.app is Intercom's own file, not AnnounceKit's.
+domain_standard:
+  market: product communication / changelog and release notes
+  applicable_standard: none
+  conforms: null
+  note: >-
+    REWARD-ONLY, and correctly empty here. There is no domain standard for
+    changelog, release-note or product-update interchange - no schema body, no
+    interchange format, no registry. The nearest neighbours are generic
+    syndication formats, and AnnounceKit does implement those on the OUTPUT
+    side: the hosted changelog serves RSS 2.0 (/rss.xml, application/rss+xml)
+    and Atom (/atom.xml, application/atom+xml), and the pricing page lists "RSS,
+    Atom & JSON Feed" as a distribution feature. That is syndication, not a
+    domain contract standard, so it is recorded here rather than claimed as
+    domain_standard conformance.
+  syndication_evidence:
+  - {url: 'https://changelog.announcekit.app/rss.xml', http_status: 200, format: RSS 2.0}
+  - {url: 'https://changelog.announcekit.app/atom.xml', http_status: 200, format: Atom 1.0}
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

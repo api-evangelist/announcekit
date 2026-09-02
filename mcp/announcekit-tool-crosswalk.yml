@@ -1,0 +1,251 @@
+generated: '2026-09-02'
+method: derived
+source: >-
+  Derived by binding each tool in AnnounceKit's published announcekit-mcp 0.1.0
+  package to the GraphQL root field its own request document names, checked
+  against the live introspected schema at https://announcekit.app/gq/v2
+  (graphql/announcekit-schema.graphql, introspected 2026-09-02).
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit ships no OpenAPI, so this crosswalk binds MCP tools to GraphQL
+  root fields rather than REST operationIds. Confidence is high throughout
+  because the binding is not inferred from names - each tool file in the
+  provider's own package embeds the GraphQL document it sends, and every named
+  field resolves in the live schema.
+surfaces:
+  graphql:
+    endpoint: https://announcekit.app/gq/v2
+    schema: graphql/announcekit-schema.graphql
+    gated: false
+    note: >-
+      Introspection is open and unauthenticated; executing most queries is not.
+      93 Query fields, 150 Mutation fields.
+  mcp:
+    endpoint: https://mcp.announcekit.app/mcp
+    manifest: mcp/announcekit-mcp.yml
+    gated: true
+    note: tools/list returns 401 without a Bearer token.
+  openapi:
+    present: false
+    note: >-
+      No OpenAPI or Swagger document is published. /openapi.json,
+      /openapi.yaml, /swagger.json and /api-docs on announcekit.app all return
+      404 (probed 2026-09-02). The GraphQL schema is the machine-readable
+      contract.
+crosswalk:
+- tool: list_projects
+  category: projects
+  graphql: [me]
+  binding: query
+  confidence: high
+  note: 'query ListProjects { me { ... } } - returns the projects the token can reach.'
+- tool: list_labels
+  category: labels
+  graphql: [labels]
+  binding: query
+  confidence: high
+- tool: list_posts
+  category: posts
+  graphql: [posts]
+  binding: query
+  confidence: high
+- tool: get_post
+  category: posts
+  graphql: [post]
+  binding: query
+  confidence: high
+- tool: list_post_templates
+  category: posts
+  graphql: [postTemplates]
+  binding: query
+  confidence: high
+- tool: get_post_stats
+  category: analytics
+  graphql: [getPostStatistics]
+  binding: query
+  confidence: high
+  note: Takes an AnalyticsInput with project_id and a start_date/end_date range.
+- tool: get_post_status_summary
+  category: analytics
+  graphql: [getPostStatus]
+  binding: query
+  confidence: high
+  note: Takes a DateRange input.
+- tool: list_feedback
+  category: feedback
+  graphql: [feedbacks, feedbackCounts]
+  binding: query
+  confidence: high
+  note: Composite - one tool call reads both the feedback page and the reaction counts.
+- tool: list_activities
+  category: analytics
+  graphql: [activities]
+  binding: query
+  confidence: high
+- tool: get_nps
+  category: nps
+  graphql: [getNps]
+  binding: query
+  confidence: high
+  note: >-
+    The package comments that the NPS calculation is a mutation not callable by
+    read-scoped tokens, so the read tool goes through the getNps query instead.
+- tool: list_segments
+  category: segmentation
+  graphql: [segments]
+  binding: query
+  confidence: high
+- tool: list_external_users
+  category: audience
+  graphql: [externalUsers, externalUserCount]
+  binding: query
+  confidence: high
+  note: Composite - page of users plus the total count.
+- tool: list_feeds
+  category: feeds
+  graphql: [feeds]
+  binding: query
+  confidence: high
+- tool: list_feature_requests
+  category: feature-requests
+  graphql: [featureRequests]
+  binding: query
+  confidence: high
+  note: sort_by maps to the FeatureRequestSortBy enum (TOP, TRENDING, NEW).
+- tool: list_roadmap
+  category: roadmap
+  graphql: [statuses]
+  binding: query
+  confidence: high
+  note: The roadmap is modelled as status columns; issues hang off each status.
+- tool: save_label
+  category: labels
+  graphql: [saveLabel]
+  binding: mutation
+  confidence: high
+- tool: create_post
+  category: posts
+  graphql: [savePost, projectLocale]
+  binding: mutation
+  confidence: high
+  note: >-
+    Resolves the project locale first, then calls savePost. Creates as draft
+    unless is_draft is false.
+- tool: update_post
+  category: posts
+  graphql: [post, savePost]
+  binding: mutation
+  confidence: high
+  note: >-
+    Reads the post first (GetPostForUpdate) and re-sends the merged content, so
+    it is a read-modify-write, not a patch.
+- tool: publish_post
+  category: posts
+  graphql: [post, savePost]
+  binding: mutation
+  confidence: high
+  note: 'Same savePost path with is_draft: false. Shares postCommon.js with update_post.'
+- tool: schedule_post
+  category: posts
+  graphql: [post, savePost]
+  binding: mutation
+  confidence: high
+  note: Same savePost path, setting visible_at to a future date.
+- tool: update_post_locale
+  category: posts
+  graphql: [projectLocales, updatePostLocale]
+  binding: mutation
+  confidence: high
+- tool: save_post_template
+  category: posts
+  graphql: [savePostTemplate]
+  binding: mutation
+  confidence: high
+- tool: generate_post_draft
+  category: ai
+  graphql: [autoGeneratePostContents, project]
+  binding: mutation
+  confidence: high
+- tool: improve_text
+  category: ai
+  graphql: [aiActions]
+  binding: mutation
+  confidence: high
+- tool: create_feature_request
+  category: feature-requests
+  graphql: [saveFeatureRequest, project]
+  binding: mutation
+  confidence: high
+- tool: comment_feature_request
+  category: feature-requests
+  graphql: [commentFeatureRequest]
+  binding: mutation
+  confidence: high
+- tool: reply_feature_request
+  category: feature-requests
+  graphql: [replyFeatureRequest]
+  binding: mutation
+  confidence: high
+  note: Notifies the feature request's subscribers; replyFeatureRequestToSubscribers is the adjacent field.
+- tool: create_roadmap_item
+  category: roadmap
+  graphql: [saveIssue]
+  binding: mutation
+  confidence: high
+- tool: create_roadmap_status
+  category: roadmap
+  graphql: [saveStatus]
+  binding: mutation
+  confidence: high
+mcp_only: []
+graphql_only_highlights:
+  note: >-
+    The MCP server exposes 29 tools against a GraphQL surface of 243 root fields
+    (93 queries + 150 mutations). The unexposed remainder is not an oversight -
+    it is the deliberate boundary the vendor documents. The largest excluded
+    groups are listed here rather than enumerated one by one.
+  groups:
+  - name: destructive
+    examples: [deletePost, deleteLabel, deleteFeatureRequest, deleteIssue, deleteStatus,
+      deleteWidget, deleteProject, deleteAllPosts, deleteAllExternalUsers, deleteAllNps,
+      removeExternalUser, deleteActivity]
+    reason: Every delete is excluded from the MCP server by design; deletes stay dashboard-only.
+  - name: billing-and-subscription
+    examples: [beginPaddleSubscription, ensureSubscription, cancelSubscription, saveBillingInfo,
+      invoices, plans, checkSubscriptionPlan, createCoupons]
+    reason: Account and billing actions are intentionally left out of the agent surface.
+  - name: identity-and-access
+    examples: [login, logout, createUser, acceptInvite, createTotpConfig, saveSamlConfig,
+      addProjectMember, updateProjectMemberRole, createAccessToken, revokeAccessToken,
+      revokeConnectedApp]
+    reason: Authentication, SSO, team membership and token lifecycle are dashboard-only.
+  - name: widgets-and-configuration
+    examples: [ensureWidget, saveWidget, saveWidgetTheme, saveFeed, verifyCname, saveEmailConfig,
+      saveProjectRoadmapConfig, saveProjectWebhook, removeProjectWebhook]
+    reason: >-
+      Widget, feed, email and webhook configuration is a setup-time concern the
+      server does not expose. Note this means webhooks cannot be managed by an
+      agent even though they can be by the GraphQL API.
+  - name: knowledge-base
+    examples: [knowledgeBaseArticles, saveKnowledgeBaseArticle, generateKnowledgeBaseArticleSummary,
+      importKnowledgeBaseFromIntercom, knowledgeBaseAnalytics]
+    reason: >-
+      The Knowledge Base entered beta on 2026-08-13, after announcekit-mcp 0.1.0
+      shipped on 2026-07-01. It is in the schema but not yet in the tool set.
+  - name: imports
+    examples: [importHeadway, importBeamer, importGitHub, importNoticeable, importReleaseNotes,
+      importExternalUsers]
+    reason: Migration tooling, not runtime agent work.
+coverage:
+  mcp_tools: 29
+  mcp_tools_bound: 29
+  graphql_query_fields: 93
+  graphql_mutation_fields: 150
+  graphql_root_fields_total: 243
+  rest_operations: 0
+  binding_rate: 1.0
+  graphql_surface_exposed_to_agents: 0.12
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

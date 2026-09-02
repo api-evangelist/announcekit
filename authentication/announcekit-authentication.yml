@@ -1,0 +1,122 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://announcekit.app/docs/graphql-api,
+  https://help.announcekit.app/en/articles/15827230-mcp-server-connect-your-ai-assistant-to-announcekit,
+  https://help.announcekit.app/en/articles/6583616-jwt-user-authentication,
+  https://announcekit.app/security, the probed RFC 8414 metadata at
+  https://announcekit.app/.well-known/oauth-authorization-server (HTTP 200) and
+  RFC 9728 metadata at
+  https://mcp.announcekit.app/.well-known/oauth-protected-resource (HTTP 200),
+  and the introspected GraphQL schema (AccessToken, ConnectedApp, SAMLConfig,
+  TOTPConfig types), 2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit has no OpenAPI securitySchemes to derive from - the contract is
+  GraphQL - so this profile is assembled from the documented auth paths and the
+  live OAuth metadata. Four distinct schemes coexist: Basic auth on the GraphQL
+  endpoint, ak_pat_ bearer tokens for the MCP server, a full OAuth 2.0
+  authorization-code + PKCE flow behind the hosted MCP login, and JWT-signed
+  user identity for the client-side widget.
+schemes:
+- id: graphql-basic
+  type: http
+  scheme: basic
+  in: header
+  header: Authorization
+  surface: https://announcekit.app/gq/v2
+  description: >-
+    The documented way to call the GraphQL API directly: a Basic Authentication
+    token supplied in the request header. AnnounceKit's docs also accept the
+    dashboard login cookies (sesid, sesid.sig) for browser-side use, and the
+    GraphiQL IDE works with no explicit credential once signed in.
+  documented: https://announcekit.app/docs/graphql-api
+- id: personal-access-token
+  type: http
+  scheme: bearer
+  in: header
+  header: Authorization
+  token_prefix: ak_pat_
+  surface: https://mcp.announcekit.app/mcp
+  description: >-
+    Project-scoped access tokens created under Settings > API Tokens (owners and
+    managers only). Shown once at creation. Two scopes, read and write. A token
+    acts on behalf of the member who created it and inherits that member's role
+    and project access; if the member loses access, the token stops working.
+  schema_backing:
+    type: AccessToken
+    fields: [id, name, prefix, scope, created_by, created_at, last_used_at, expires_at]
+    note: >-
+      The schema carries expires_at and last_used_at, so tokens are expirable and
+      their use is tracked, though the docs do not state a default lifetime.
+  documented: https://help.announcekit.app/en/articles/15827230-mcp-server-connect-your-ai-assistant-to-announcekit
+- id: oauth2
+  type: oauth2
+  flow: authorization_code
+  pkce: S256
+  dynamic_client_registration: true
+  issuer: https://announcekit.app
+  authorization_endpoint: https://announcekit.app/oauth/authorize
+  token_endpoint: https://announcekit.app/oauth/token
+  registration_endpoint: https://announcekit.app/oauth/register
+  grant_types: [authorization_code, refresh_token]
+  response_types: [code]
+  token_endpoint_auth_methods: [none]
+  scopes:
+    read: View posts, feedback, stats and roadmap.
+    write: Read, plus create and update content. No deletes.
+  surface: https://mcp.announcekit.app/mcp
+  description: >-
+    The hosted MCP login flow. An MCP client discovers the authorization server
+    from the protected-resource metadata, registers itself dynamically, and
+    sends the user to AnnounceKit to log in and approve - no token is copied by
+    hand. Grants are listed and revocable under Settings > Connected apps, with
+    a ceiling of 10 connected apps per user.
+  schema_backing:
+    type: ConnectedApp
+    fields: [id, client_name, scope, created_at, last_used_at]
+  probed:
+    url: https://announcekit.app/.well-known/oauth-authorization-server
+    http_status: 200
+    fetched: '2026-09-02'
+    file: well-known/announcekit-oauth-authorization-server.json
+- id: widget-jwt
+  type: jwt
+  in: client
+  surface: In-app widget / user tracking
+  description: >-
+    Signed user tracking. The host application signs the end user's identity as
+    a JSON Web Token so the widget can verify who it is showing targeted or
+    private content to, preventing client-side spoofing of user attributes.
+    This authenticates the END USER to the widget, not a developer to the API.
+  documented: https://announcekit.app/docs/json-web-tokens
+dashboard_authentication:
+- name: SAML 2.0 Single Sign-On
+  availability: Scale and Enterprise plans
+  schema_backing: {type: SAMLConfig, query: samlConfig, login: samlLoginURL}
+  documented: https://announcekit.app/security
+- name: TOTP two-factor authentication
+  availability: All plans, all team members
+  schema_backing: {type: TOTPConfig, mutations: [createTotpConfig, activateTotpConfig, removeTotpConfig]}
+- name: Role-based access control
+  roles: [owner, manager, editor, viewer]
+  schema_backing: {enum: ProjectRole}
+  note: >-
+    The four roles are declared in the live GraphQL schema as the ProjectRole
+    enum, which matches the four roles named on the security page.
+- name: IP access control
+  availability: Enterprise plans
+  documented: https://announcekit.app/security
+gaps:
+- >-
+  The Basic Authentication scheme on the GraphQL endpoint is documented without
+  naming the header format or what the two halves of the credential are; the
+  docs say "supply a Basic Authentication token in request Header" and stop
+  there. An implementer has to infer it.
+- >-
+  No documented token rotation or expiry policy for ak_pat_ tokens, even though
+  the schema exposes an expires_at field.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

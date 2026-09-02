@@ -1,0 +1,212 @@
+generated: '2026-09-02'
+method: derived
+source: >-
+  Derived from the live introspected GraphQL schema at
+  https://announcekit.app/gq/v2 (graphql/announcekit-schema.graphql, 179 types,
+  2026-09-02). Relationships are read from typed object references and from
+  *_id scalar fields; nothing here is inferred from prose.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  The AnnounceKit entity graph. Project is the root of everything: it is the
+  billing unit, the permission boundary and the foreign key on essentially every
+  other entity. There is no account or organization type above it - a customer
+  with three products buys three projects, which is exactly what the flat
+  per-project pricing model implies.
+root_entity: Project
+identifier_convention:
+  type: ID
+  format: opaque numeric string
+  note: >-
+    Every id is the GraphQL ID scalar and is serialised as a numeric string
+    (e.g. project id "2672", label id "5442" in the vendor's own tutorial).
+    There are no typed or prefixed identifiers, so an id carries no information
+    about what it identifies - a bare "5442" is only a label because of where it
+    was read. Access tokens are the one exception and carry an ak_pat_ prefix.
+custom_scalars: [Date, JSONObject]
+scalar_note: >-
+  JSONObject is used for eight distinct concerns (segment_filters, view_data,
+  Widget.options, Widget.theme, Nps.options, filters, fields, user_filter). Its
+  shape is invisible to introspection and undocumented, so those regions of the
+  model are opaque to a generated client.
+entities:
+- name: Project
+  description: The workspace, billing unit and permission boundary.
+  key_fields: [id, name, locale]
+  relationships:
+  - {type: has_many, target: Post, via: project_id}
+  - {type: has_many, target: Feed, via: project_id}
+  - {type: has_many, target: Widget, via: project_id}
+  - {type: has_many, target: Label, via: project_id}
+  - {type: has_many, target: FeatureRequest, via: project_id}
+  - {type: has_many, target: Issue, via: project_id}
+  - {type: has_many, target: Status, via: project_id}
+  - {type: has_many, target: ExternalUser, via: project_id}
+  - {type: has_many, target: ProjectMember, via: project_id}
+  - {type: has_many, target: ProjectLocale, via: project_id}
+  - {type: has_many, target: ProjectSegment, via: project_id}
+  - {type: has_many, target: ProjectWebhook, via: project_id}
+  - {type: has_many, target: KnowledgeBaseFolder, via: project_id}
+  - {type: has_one, target: SAMLConfig, via: project_id}
+  - {type: has_one, target: EmailConfig, via: project_id}
+  - {type: has_one, target: ProjectRoadmapConfig, via: project_id}
+  - {type: has_one, target: ProjectFeatureRequestConfig, via: project_id}
+- name: Post
+  description: An announcement or release note. The central content object.
+  key_fields: [id, project_id, created_at, visible_at, expire_at, is_draft, is_pinned,
+    is_internal, is_pushed, status]
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: belongs_to, target: User, via: user_id}
+  - {type: has_many, target: PostContent, via: contents}
+  - {type: has_many, target: PostLabel, via: labels}
+  - {type: has_many, target: KnowledgeBaseArticle, via: kb_articles}
+  - {type: has_many, target: RelatedRoadmapItem, via: related_roadmap}
+  - {type: has_many, target: RelatedFeatureRequest, via: related_feature_requests}
+  - {type: has_one, target: Image, via: image_id}
+  - {type: has_one, target: NpsStatScore, via: nps}
+  - {type: has_one, target: Notification, via: notification}
+  state_model:
+    fields: [is_draft, visible_at, expire_at, is_paused, status]
+    note: >-
+      Post state is not an enum. It is computed from is_draft plus the
+      visible_at / expire_at date pair, which is why the MCP server needs three
+      separate tools (create_post, publish_post, schedule_post) that all call
+      the same savePost mutation with different date and flag combinations.
+- name: PostContent
+  description: The localized body of a post. A post carries one content record per locale.
+  key_fields: [locale_id, title, body]
+  relationships:
+  - {type: belongs_to, target: Post, via: post_id}
+  - {type: belongs_to, target: Locale, via: locale_id}
+- name: FeatureRequest
+  description: A user-submitted request with voting and commenting.
+  key_fields: [id, project_id, title, summary, is_archived, is_internal, is_approved,
+    is_voting_enabled, is_commenting_enabled]
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: belongs_to, target: ExternalUser, via: external_user_id}
+  - {type: belongs_to, target: Issue, via: issue_id}
+  - {type: has_many, target: FeatureRequestComment, via: comments}
+  - {type: has_many, target: FeatureRequestVote, via: votes}
+  - {type: has_many, target: FeatureRequestLabel, via: labels}
+  - {type: has_many, target: FeatureRequestContent, via: contents}
+  - {type: has_one, target: FeatureRequestStats, via: stats}
+  note: >-
+    The issue_id link is the hinge between the two halves of the product - it is
+    how a request the users voted for becomes an item on the public roadmap.
+- name: Issue
+  description: A roadmap item, sitting in a status column.
+  key_fields: [id, project_id, title, summary, due_at, sort_index]
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: belongs_to, target: Status, via: status_id}
+  - {type: has_many, target: IssueLabel, via: labels}
+- name: Status
+  description: A roadmap column, e.g. Planned / In Progress / Done.
+  key_fields: [id, project_id, name, color]
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: has_many, target: Issue, via: status_id}
+- name: Widget
+  description: An embeddable in-app surface. Mode and layout select the display style.
+  key_fields: [id, project_id, name, mode, action, slug, options, theme, version, type,
+    layout]
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+- name: Feed
+  description: A public changelog page where posts appear.
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: has_many, target: Post, via: project_id}
+- name: ExternalUser
+  description: >-
+    An end user of the CUSTOMER's product - the audience, not an AnnounceKit
+    account holder. This is the entity JWT user tracking authenticates and that
+    segmentation targets.
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: has_many, target: Activity, via: external_user_id}
+  - {type: has_many, target: Feedback, via: external_user_id}
+  - {type: has_many, target: FeatureRequestVote, via: external_user_id}
+- name: User
+  description: An AnnounceKit account holder - a team member, distinct from ExternalUser.
+  relationships:
+  - {type: has_many, target: ProjectMember, via: user_id}
+  - {type: has_many, target: AccessToken, via: created_by}
+  - {type: has_many, target: ConnectedApp, via: user_id}
+  - {type: has_one, target: TOTPConfig, via: user_id}
+- name: ProjectMember
+  description: The join between User and Project, carrying the role.
+  key_fields: [role]
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: belongs_to, target: User, via: user_id}
+  enum: 'ProjectRole: owner, manager, editor, viewer'
+- name: Feedback
+  description: A reader's reaction or comment on a post.
+  relationships:
+  - {type: belongs_to, target: Post, via: post_id}
+  - {type: belongs_to, target: ExternalUser, via: external_user_id}
+- name: Activity
+  description: A tracked event - view, click, feedback or vote.
+  enum: 'ActionSource: widget, email, feed, nps'
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  - {type: belongs_to, target: Post, via: post_id}
+  - {type: belongs_to, target: ExternalUser, via: external_user_id}
+- name: Nps
+  description: An NPS survey attached to a post.
+  relationships:
+  - {type: belongs_to, target: Post, via: post_id}
+  - {type: belongs_to, target: Project, via: project_id}
+- name: Label
+  description: A tag applied to posts, feature requests and roadmap items.
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  note: >-
+    One Label type serves three surfaces; which surfaces it applies to is
+    carried in the options JSONObject (applies_to_posts,
+    applies_to_feature_requests, applies_to_roadmap in the MCP tool schema).
+    PostLabel, FeatureRequestLabel and IssueLabel are the per-surface join types.
+- name: KnowledgeBaseArticle
+  description: A help-center article. Beta as of 2026-08-13.
+  relationships:
+  - {type: belongs_to, target: KnowledgeBaseFolder, via: folder_id}
+  - {type: has_many, target: KnowledgeBaseArticleRevision, via: article_id}
+  - {type: has_many, target: KnowledgeBaseArticleContent, via: contents}
+- name: AccessToken
+  description: An ak_pat_ API token.
+  key_fields: [id, name, prefix, scope, created_by, created_at, last_used_at, expires_at]
+  relationships:
+  - {type: belongs_to, target: User, via: created_by}
+- name: ConnectedApp
+  description: An OAuth grant made through the hosted MCP login flow.
+  key_fields: [id, client_name, scope, created_at, last_used_at]
+- name: ProjectWebhook
+  description: A registered webhook endpoint.
+  key_fields: [id, project_id, is_enabled, url]
+  relationships:
+  - {type: belongs_to, target: Project, via: project_id}
+  note: >-
+    No secret field. There is nowhere in the model to store a signing key, which
+    corroborates the absence of any documented webhook signature scheme.
+localization:
+  note: >-
+    Localization is modelled as a first-class dimension rather than a field.
+    Post, FeatureRequest and KnowledgeBaseArticle each hold a contents[] array
+    of per-locale records with a defaultContent shortcut, and ProjectLocale
+    declares which locales a project supports.
+statistics:
+  counts:
+    types: 179
+    types_excluding_introspection: 171
+    object_types: 142
+    input_object_types: 16
+    enum_types: 6
+    scalar_types: 7
+    query_fields: 93
+    mutation_fields: 150
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

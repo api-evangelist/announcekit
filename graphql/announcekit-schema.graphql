@@ -1,0 +1,1885 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+
+enum ActionSource {
+  widget
+  email
+  feed
+  nps
+}
+
+
+enum ExternalUserSortField {
+  SEEN_AT
+  NAME
+}
+
+
+enum FeatureRequestSortBy {
+  TOP
+  TRENDING
+  NEW
+}
+
+
+enum ProjectRole {
+  owner
+  manager
+  editor
+  viewer
+}
+
+
+enum SegmentType {
+  STRING
+}
+
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+
+input AnalyticsInput {
+  project_id: ID!
+  start_date: Date!
+  end_date: Date!
+  dimensions: [String!]
+  metrics: [String!]
+  event_type: [String!]
+  post_id: [Int!]
+  widget_id: [Int!]
+  feed_id: [Int!]
+  client_country: [String!]
+  client_locale: [String!]
+  client_device: [String!]
+  sort_by: String
+  sort_desc: Boolean
+  user_filter: JSONObject
+  limit: Int
+  offset: Int
+}
+
+
+input AttributionInput {
+  utm_source: String
+  utm_medium: String
+  utm_campaign: String
+  utm_content: String
+  utm_term: String
+  referrer: String
+  landing_page: String
+  captured_at: Date
+  country: String
+  locale: String
+  user_agent: String
+  os: String
+  new_workspace_reason: String
+  new_workspace_reason_detail: String
+}
+
+
+input DateRange {
+  start_date: Date!
+  end_date: Date!
+}
+
+
+input FeatureRequestContentInput {
+  locale_id: String!
+  title: String!
+  summary: String
+}
+
+
+input FeatureRequestQuery {
+  text: String
+  labels: [ID!]
+  is_internal: Boolean
+  is_public: Boolean
+  is_archived: Boolean
+  in_approvement: Boolean
+  date_from: Date
+  date_to: Date
+}
+
+
+input ImportExternalUsersInput {
+  project_id: ID!
+  users: [ImportExternalUsersInputUserInput!]!
+}
+
+
+input ImportExternalUsersInputFieldInput {
+  name: String!
+  value: String!
+}
+
+
+input ImportExternalUsersInputUserInput {
+  id: String!
+  email: String!
+  name: String
+  is_subscribed: Boolean! = true
+  fields: [ImportExternalUsersInputFieldInput!]
+}
+
+
+input IssueOrderInput {
+  id: ID!
+  sort_index: Int!
+  status_id: ID!
+}
+
+
+input KnowledgeBaseArticleContentInput {
+  locale_id: String!
+  title: String!
+  body: String
+  summary: String
+}
+
+
+input KnowledgeBaseFolderContentInput {
+  locale_id: String!
+  name: String!
+  description: String
+}
+
+
+input LocaleEntryInput {
+  key: String!
+  value: String!
+}
+
+
+input PostContentInput {
+  locale_id: String!
+  title: String!
+  body: String!
+  summary: String
+  name: String
+}
+
+
+input SaveProjectEmailSenderConfigInput {
+  project_id: ID!
+  provider: String!
+  sender_name: String
+  sender_email: String
+  sender_domain: String
+  provider_endpoint: String
+  provider_api_key: String
+  provider_username: String
+  provider_password: String
+  email_reply_to: String
+}
+
+
+input SaveProjectFeatureRequestConfigInput {
+  project_id: ID!
+  is_enabled: Boolean!
+  is_hidden_in_feed: Boolean!
+  is_hidden_in_widget: Boolean!
+  is_approvement_enabled: Boolean!
+  is_default_status_private: Boolean!
+  is_comments_public: Boolean!
+  is_category_public: Boolean!
+  button_name: String
+}
+
+
+input SaveProjectRoadmapConfigInput {
+  project_id: ID!
+  title: String
+  is_enabled: Boolean!
+  is_hidden_in_feed: Boolean!
+  is_hidden_in_widget: Boolean!
+}
+
+
+type AIActionResponse {
+  originalText: String!
+  processedText: String!
+  actionType: String!
+}
+
+
+type AccessToken {
+  id: ID!
+  name: String!
+  prefix: String!
+  scope: String!
+  created_by: String
+  created_at: Date!
+  last_used_at: Date
+  expires_at: Date
+}
+
+
+type Activity {
+  id: ID!
+  type: String!
+  url: String
+  created_at: Date!
+  project_id: ID!
+  external_user_id: ID
+  external_user: ExternalUser
+  post_id: ID
+  feature_request_id: ID
+  feature_request: FeatureRequest
+  post: Post
+  feedback_id: ID
+  feedback: Feedback
+}
+
+
+type AdditionalPlan {
+  id: ID!
+  project_id: ID!
+  plan_id: String
+  payment_gateway: String
+  subscription_id: String
+  trial_ends_at: Date
+  created_at: Date
+  updated_at: Date
+}
+
+
+type Analytics {
+  unsubs: Int!
+  subs: Int!
+  feedback: Int!
+  reaction: Int!
+  mail_sent: Int!
+  post_views: Int!
+  feed_views: Int!
+  widget_imp: Int!
+  widget_views: Int!
+}
+
+
+type AnalyticsChart {
+  labels: [String!]
+  datasets: [ChartDataset]!
+}
+
+
+type AnalyticsLatestActivitiesResponse {
+  latest_post: LatestActivities
+  upcoming_post: LatestActivities
+  draft_post: LatestActivities
+  post_feedback: LatestActivities
+  post_reaction: LatestActivities
+  feature_request: LatestActivities
+  feature_request_vote: LatestActivities
+  feature_request_comment: LatestActivities
+}
+
+
+type AnalyticsPost {
+  posts: [AnalyticsPostItem]!
+}
+
+
+type AnalyticsPostItem {
+  id: Int!
+  title: String
+  view: Int!
+  likes: Int!
+  dislikes: Int!
+  neutral: Int!
+  comment: Int!
+}
+
+
+type AnalyticsReport {
+  start_date: Date!
+  end_date: Date!
+  sort_by: String
+  sort_desc: Boolean
+  headers: [AnalyticsReportHeader!]
+  rows: [[String]]
+}
+
+
+type AnalyticsReportHeader {
+  name: String!
+  type: String!
+}
+
+
+type AudienceCount {
+  count: Int
+  capped: Boolean!
+}
+
+
+type Auditlog {
+  id: ID!
+  created_at: Date!
+  username: String!
+  actor_type: String
+  ip_address: String!
+  event_type: String!
+  event_action: String!
+  target_type: String
+  target_id: String
+  target_name: String
+  metadata: JSONObject!
+}
+
+
+type AutoGeneratedPostContent {
+  body: String!
+  finished: Boolean!
+}
+
+
+type BeginPaddleSubscriptionResult {
+  state: String!
+  metadata: JSONObject
+}
+
+
+type BillingInfo {
+  id: ID!
+  project_id: ID!
+  name: String!
+  email: String!
+  address: String
+  country: String
+  state: String
+  card_summary: String
+}
+
+
+type BoosterStatsResponse {
+  modal: Int!
+  bar: Int!
+  popup: Int!
+  total: Int!
+}
+
+
+type CelloTokenResponse {
+  token: String!
+}
+
+
+type ChartDataset {
+  label: String!
+  data: [Int]!
+}
+
+
+type ConnectedApp {
+  id: ID!
+  client_name: String
+  scope: String!
+  created_at: Date!
+  last_used_at: Date
+}
+
+
+type CreatedAccessToken {
+  token: String!
+  accessToken: AccessToken!
+}
+
+
+type CreatedFeatureRequestsResponse {
+  public: Int!
+  internal: Int!
+  pendingApproval: Int!
+  archived: Int!
+  total: Int!
+}
+
+
+type CreatedPostsResponse {
+  live: Int!
+  scheduled: Int!
+  draft: Int!
+  expired: Int!
+  total: Int!
+}
+
+
+type DangerZonePresence {
+  has_nps_data: Boolean!
+  has_feature_request_data: Boolean!
+  has_kb_data: Boolean!
+}
+
+
+type EmailConfig {
+  project_id: ID!
+  send_day: Int
+  sending_interval: String
+  filter_labels: [String]
+  include_labels: [String]
+  include_segmented_posts: Boolean
+  post_content_type: String
+  last_send_date: Date
+  is_enabled: Boolean
+}
+
+
+type EmailDigestStatus {
+  id: ID!
+  sending_interval: String!
+}
+
+
+type EmailSenderTestResult {
+  ok: Boolean!
+  message: String
+}
+
+
+type EmailStatsResponse {
+  unique_email_sent: Int!
+  new_subscription: Int!
+  mail_link_click: Int!
+  new_unsubscription: Int!
+}
+
+
+type ExternalUser {
+  id: ID!
+  project_id: ID!
+  created_at: Date!
+  seen_at: Date!
+  name: String
+  email: String
+  fields: JSONObject!
+  is_anon: Boolean!
+  is_following: Boolean!
+  is_email_verified: Boolean!
+  is_imported: Boolean!
+  avatar: String
+  is_app: Boolean
+}
+
+
+type FeatureField {
+  value: Boolean!
+  label: String!
+}
+
+
+type FeatureRequest {
+  id: ID!
+  project_id: ID!
+  project: Project!
+  created_at: Date!
+  updated_at: Date!
+  user_id: ID
+  user: User
+  external_user_id: String
+  external_user: ExternalUser
+  title: String!
+  summary: String
+  is_deleted: Boolean!
+  is_archived: Boolean!
+  is_internal: Boolean!
+  is_approved: Boolean!
+  is_voting_enabled: Boolean!
+  is_commenting_enabled: Boolean!
+  user_info: UserInfo
+  issue_id: ID
+  stats: FeatureRequestStats!
+  comments: [FeatureRequestComment!]!
+  votes: [FeatureRequestVote!]!
+  labels: [FeatureRequestLabel!]!
+  segment_filters: JSONObject
+  contents: [FeatureRequestContent!]!
+  defaultContent: FeatureRequestContent!
+  votes_modifications: [FeatureRequestVoteModification!]!
+}
+
+
+type FeatureRequestComment {
+  id: ID!
+  feature_request_id: ID!
+  content: String!
+  user_id: ID
+  user: User
+  external_user_id: String
+  external_user: ExternalUser
+  created_at: Date!
+  status: String!
+  user_info: UserInfo
+  is_admin: Boolean
+}
+
+
+type FeatureRequestContent {
+  feature_request_id: ID!
+  locale_id: String
+  title: String
+  summary: String
+}
+
+
+type FeatureRequestLabel {
+  label_id: ID!
+  feature_request_id: ID!
+  label: Label!
+  feature_request: FeatureRequest!
+}
+
+
+type FeatureRequestReply {
+  id: ID!
+  project_id: ID!
+  feature_request_id: ID!
+  user_id: ID!
+  user: User
+  created_at: Date!
+  external_user_id: String
+  external_user: ExternalUser
+  subject: String
+  content: String
+  subscriber_type: String
+  is_displayed: Boolean
+}
+
+
+type FeatureRequestResponse {
+  id: ID!
+  project_id: ID!
+  feature_request_id: ID!
+  user_id: ID!
+  high_creativity: String!
+  low_creativity: String!
+  created_at: Date
+  is_enabled: Boolean
+}
+
+
+type FeatureRequestStats {
+  votes: Int!
+  comments: Int!
+}
+
+
+type FeatureRequestStatusStats {
+  is_archived: Int!
+  pending_approval: Int!
+  is_internal: Int!
+  is_public: Int!
+}
+
+
+type FeatureRequestVote {
+  feature_request_id: ID!
+  project_id: ID!
+  external_user_id: ID!
+  external_user: ExternalUser
+  created_at: Date!
+  user_info: UserInfo
+}
+
+
+type FeatureRequestVoteModification {
+  id: ID!
+  feature_request_id: ID!
+  user_info: UserInfo!
+  source: String!
+  count: Int!
+  created_at: Date!
+}
+
+
+type FeatureRequests {
+  list: [FeatureRequest!]!
+  count: Int!
+  page: Int!
+  pages: Int!
+  statusStats: FeatureRequestStatusStats!
+}
+
+
+type FeatureRequestsStatsResponse {
+  upvotes: Int!
+  comments: Int!
+  movedToRoadmap: Int!
+  generatedTickets: Int!
+  movedToJira: Int!
+  repliedRequests: Int!
+}
+
+
+type Features {
+  hasCustomLabels: FeatureField!
+  hasCustomDomains: FeatureField!
+  hasWhiteLabel: FeatureField!
+  hasTeam: FeatureField!
+  hasPrivacy: FeatureField!
+  hasSubscriptions: FeatureField!
+  hasFeedback: FeatureField!
+  hasUserTracking: FeatureField!
+  hasSegmentation: FeatureField!
+  hasCustomCSS: FeatureField!
+  hasIntegrations: FeatureField!
+  hasPostCustomization: FeatureField!
+  hasMultiLanguage: FeatureField!
+  hasThemes: FeatureField!
+  hasBoosters: FeatureField!
+  hasEmailDigest: FeatureField!
+  hasFeatureRequest: FeatureField!
+  hasJiraIntegration: FeatureField!
+  hasNotify: FeatureField!
+  hasNps: FeatureField!
+}
+
+
+type Feed {
+  id: ID!
+  project_id: ID!
+  project: Project!
+  name: String!
+  slug: String!
+  created_at: Date!
+  custom_host: String
+  website: String
+  color: String!
+  url: String!
+  is_disabled: Boolean!
+  is_unindexed: Boolean!
+  is_private: Boolean!
+  is_rate_limited: Boolean!
+  is_readmore: Boolean!
+  html_inject: String
+  metadata: JSONObject!
+  theme: JSONObject!
+  version: Int!
+}
+
+
+type Feedback {
+  id: ID!
+  project_id: ID!
+  post_id: ID
+  post: Post
+  feature_request_id: ID
+  feature_request: FeatureRequest
+  vote: String
+  reaction: String
+  feedback: String
+  source: ActionSource!
+  score: Int
+  created_at: Date!
+  external_user_id: ID!
+  external_user: ExternalUser!
+}
+
+
+type FeedbackCount {
+  reaction: String!
+  count: Int!
+}
+
+
+type FeedbackToNpsResult {
+  post_id: ID!
+  score: Int!
+  feedback: String
+}
+
+
+type FeedbackToPostResult {
+  user_id: ID!
+  post_id: ID!
+  feedback: String!
+}
+
+
+type GetJiraTicketResponse {
+  ticket: String!
+}
+
+
+type Image {
+  id: ID!
+  src(size: String): String!
+}
+
+
+type Import {
+  id: ID!
+  project_id: ID!
+  user_id: ID!
+  status: String!
+  source: String!
+  created_at: Date!
+  is_continuous: Boolean!
+  message: String
+}
+
+
+type ImportExternalUsersResult {
+  added: Int!
+  updated: Int!
+}
+
+
+type Integration {
+  id: ID!
+  created_at: Date!
+  project_id: ID!
+  project: Project!
+  application: String!
+  metadata: JSONObject!
+  status: Int!
+}
+
+
+type Invite {
+  id: ID!
+  user_id: ID!
+  project_id: ID!
+  email: String!
+  created_at: Date!
+  status: String!
+  member_role: String!
+}
+
+
+type Invoice {
+  id: ID!
+  amount: Int!
+  created_at: Date!
+  paid: Boolean!
+  pdf: String!
+}
+
+
+type Issue {
+  id: ID!
+  created_at: Date!
+  updated_at: Date!
+  status_id: ID!
+  status: Status!
+  title: String!
+  summary: String
+  due_at: Date
+  sort_index: Int!
+  user_id: ID
+  user: User
+  labels: [IssueLabel!]!
+}
+
+
+type IssueLabel {
+  label_id: ID!
+  issue_id: ID!
+  label: Label!
+  issue: Issue!
+}
+
+
+type Issues {
+  list: [Issue!]!
+  count: Int!
+  page: Int!
+  pages: Int!
+}
+
+
+type IssuesResponse {
+  id: String!
+  name: String!
+  iconUrl: String!
+}
+
+
+type JiraConfiguration {
+  issues: [IssuesResponse!]!
+  reporters: [ReportersResponse!]!
+}
+
+
+type KbAnalyticsArticle {
+  article_id: ID!
+  title: String!
+  views: Int!
+  helpful_yes: Int!
+  helpful_no: Int!
+}
+
+
+type KbAnalyticsDay {
+  day: String!
+  views: Int!
+}
+
+
+type KbAnalyticsRange {
+  start_date: String!
+  end_date: String!
+}
+
+
+type KbAnalyticsSearch {
+  query: String!
+  hits: Int!
+  zero_hits: Int!
+}
+
+
+type KbAnalyticsTotals {
+  views: Int!
+  helpful_yes: Int!
+  helpful_no: Int!
+  searches: Int!
+  zero_result_searches: Int!
+}
+
+
+type KnowledgeBaseAnalytics {
+  range: KbAnalyticsRange!
+  totals: KbAnalyticsTotals!
+  top_articles: [KbAnalyticsArticle!]!
+  low_helpful_articles: [KbAnalyticsArticle!]!
+  top_searches: [KbAnalyticsSearch!]!
+  zero_result_searches: [KbAnalyticsSearch!]!
+  daily: [KbAnalyticsDay!]!
+}
+
+
+type KnowledgeBaseArticle {
+  id: ID!
+  project_id: ID!
+  folder_id: ID
+  user: User
+  updated_by_user: User
+  owner: User
+  is_draft: Boolean!
+  is_archived: Boolean!
+  publish_at: Date
+  sort_index: Int!
+  published_at: Date
+  created_at: Date!
+  updated_at: Date!
+  slug: String!
+  custom_slug: String
+  seo_title: String
+  seo_description: String
+  contents: [KnowledgeBaseArticleContent!]!
+  labels: [Label!]!
+  related_articles: [KnowledgeBaseArticle!]!
+  related_roadmap: [RelatedRoadmapItem!]!
+  related_feature_requests: [RelatedFeatureRequest!]!
+  views_total: Int!
+  helpful_yes_total: Int!
+  helpful_no_total: Int!
+}
+
+
+type KnowledgeBaseArticleContent {
+  article_id: ID!
+  locale_id: String!
+  title: String!
+  body: String
+  summary: String
+}
+
+
+type KnowledgeBaseArticleRevision {
+  id: ID!
+  article_id: ID!
+  locale_id: String!
+  user: User
+  title: String!
+  body: String
+  summary: String
+  created_at: Date!
+}
+
+
+type KnowledgeBaseArticleRevisions {
+  list: [KnowledgeBaseArticleRevision!]!
+  count: Int!
+  page: Int!
+  pages: Int!
+}
+
+
+type KnowledgeBaseArticles {
+  list: [KnowledgeBaseArticle!]!
+  count: Int!
+  page: Int!
+  pages: Int!
+}
+
+
+type KnowledgeBaseFolder {
+  id: ID!
+  project_id: ID!
+  icon: String
+  parent_folder_id: ID
+  sort_index: Int!
+  created_at: Date!
+  updated_at: Date!
+  contents: [KnowledgeBaseFolderContent!]!
+  articles_count: Int!
+}
+
+
+type KnowledgeBaseFolderContent {
+  folder_id: ID!
+  locale_id: String!
+  name: String!
+  description: String
+}
+
+
+type KnowledgeBaseImportResult {
+  folders: Int!
+  articles: Int!
+  skipped: Int!
+}
+
+
+type KnowledgeBaseSearchResult {
+  id: ID!
+  slug: String!
+  title: String!
+  summary: String
+  folder_id: ID
+}
+
+
+type KnowledgeBaseSeoSuggestion {
+  seo_title: String!
+  seo_description: String!
+}
+
+
+type KnowledgeBaseTranslation {
+  title: String!
+  body: String!
+  summary: String
+}
+
+
+type Label {
+  id: ID!
+  name: String!
+  color: String!
+  options: JSONObject!
+}
+
+
+type LatestActivities {
+  date: Date!
+  content: String!
+  optional: String
+  optional2: String
+  content_id: Int
+}
+
+
+type Locale {
+  id: ID!
+  name: String!
+  entries: [LocaleEntry!]!
+}
+
+
+type LocaleEntry {
+  key: String!
+  value: String!
+  base: String!
+}
+
+
+type Mutation {
+  saveLabel(project_id: ID!, label_id: ID, name: String!, color: String!, options: JSONObject!): Label
+  saveLabelOrder(project_id: ID!, label_ids: [ID!]!): [Label!]!
+  deleteLabel(project_id: ID!, label_id: ID!): Result!
+  createAccessToken(project_id: ID!, name: String!, scope: String, expires_at: Date): CreatedAccessToken!
+  revokeAccessToken(project_id: ID!, id: ID!): Boolean!
+  revokeConnectedApp(id: ID!): Boolean!
+  DeleteFeedback(project_id: ID!, id: ID!): Feedback
+  saveProject(project_id: ID, name: String, website: String, image_id: ID, favicon_id: ID, is_authors_listed: Boolean, is_whitelabel: Boolean, is_subscribable: Boolean, is_slack_subscribable: Boolean, is_feedback_enabled: Boolean, is_unknown_feedback_enabled: Boolean, disable_google_fonts: Boolean, ga_property: String, privacy_policy_url: String, locale: String, company_role: String, company_size: String, hear_about_us: String, attribution: AttributionInput): Project!
+  deleteProject(project_id: ID!): Result!
+  deleteAllPosts(project_id: ID!): Result!
+  deleteAllExternalUsers(project_id: ID!): Result!
+  deleteAllInAppMessages(project_id: ID!): Result!
+  deleteAllNps(project_id: ID!): Result!
+  deleteAllRoadmapItems(project_id: ID!): Result!
+  deleteAllFeatureRequests(project_id: ID!): Result!
+  deleteAllActivities(project_id: ID!): Result!
+  deleteAllKbContent(project_id: ID!): Result!
+  createDemoProject(project_id: ID!): Boolean!
+  saveBillingInfo(project_id: ID!, name: String, email: String, address: String, country: String, state: String, card_token: String, zip_code: String): BillingInfo!
+  beginPaddleSubscription(project_id: ID!, plan_id: String, additional_plan: Boolean = false): BeginPaddleSubscriptionResult!
+  ensurePaddleSubscription(project_id: ID!, subscription_id: String!, additional_plan: Boolean = false): Subscription
+  ensurePaddleSubscriptionNps(project_id: ID!, subscription_id: String!): Subscription
+  beginPaddleSubscriptionNps(project_id: ID!, plan_id: String): BeginPaddleSubscriptionResult!
+  ensureSubscription(project_id: ID!, coupon: String, plan_id: String): Subscription!
+  cancelSubscription(project_id: ID!, feedback: JSONObject, additional_plan: Boolean = false): Result!
+  cancelSubscriptionNps(project_id: ID!, feedback: JSONObject): Result!
+  generateProductDetails(project_id: ID!, url: String!): ProductDetailsResponse!
+  saveProjectDetails(project_id: ID!, url: String, description: String!, user_persona: String!): ProjectDetails!
+  me: User
+  login(email: String!, password: String!, totp_token: String, remember: Boolean): User!
+  mailLoginLink(email: String!): Boolean!
+  logout: Boolean!
+  saveUser(email: String, display_name: String, title: String, password: String, active_project_id: ID, image_id: ID, is_unsubs: Boolean): User!
+  createUser(email: String, display_name: String, title: String, password: String, recaptcha_token: String!, referrals: JSONObject): User!
+  startSignup(email: String!, recaptcha_token: String!, referrals: JSONObject): Boolean!
+  completeSignupWithToken(token: String!, password: String!, display_name: String): User!
+  resendSignupVerification(email: String!): Boolean!
+  resendSignupVerificationByToken(token: String!): Boolean!
+  acceptInvite(token: String!): [String!]!
+  verifyByMail(token: String!): [String!]!
+  recoverByMail(token: String!): [String!]!
+  resendValidationMail: Result!
+  updateProjectMemberRole(projectId: ID!, userId: ID!, role: ProjectRole!): ProjectMember!
+  createTotpConfig: TOTPConfig!
+  removeTotpConfig: Result!
+  activateTotpConfig(token: String!): TOTPConfig!
+  saveNotification(project_id: ID!, post_id: ID!, interaction: String!, type: String, options: JSONObject, url: String): Notification!
+  saveNps(project_id: ID!, post_id: ID!, interaction: String!, follow_up_question: String, options: JSONObject, skip_reason: Boolean): Nps!
+  calculateNps(project_id: ID!, post_id: ID, date_range: DateRange, segmentProfile: JSONObject): NpsStat!
+  saveProjectWebhook(project_id: ID!, webhook_id: ID, is_enabled: Boolean!, url: String!): ProjectWebhook!
+  removeProjectWebhook(project_id: ID!, webhook_id: ID!): Result!
+  addProjectMember(project_id: ID!, email: String!, member_role: String = "owner"): Invite!
+  removeProjectMember(project_id: ID!, user_id: ID!): Boolean!
+  removeProjectInvite(project_id: ID!, invite_id: ID!): Boolean!
+  addProjectLocale(project_id: ID!, locale_id: ID!): Project!
+  removeProjectLocale(project_id: ID!, locale_id: ID!): Project!
+  saveProjectLocale(project_id: ID!, locale_id: ID!, overrides: [LocaleEntryInput!]!): ProjectLocale!
+  addProjectSegment(project_id: ID!, segment_id: String!, type: SegmentType! = STRING): ProjectSegment!
+  removeProjectSegment(project_id: ID!, segment_id: String!): Result!
+  savePost(project_id: ID!, contents: [PostContentInput!]!, user_id: ID, post_id: ID, visible_at: Date, expire_at: Date, is_draft: Boolean, is_pushed: Boolean, is_pinned: Boolean, is_feedback_disabled: Boolean, image_id: ID, external_url: String, labels: [ID!], kb_article_ids: [ID!], related_issue_ids: [ID!], related_feature_request_ids: [ID!], segment_filters: JSONObject, flags: [String!], type: String, is_paused: Boolean): Post!
+  deletePost(project_id: ID!, post_id: ID!): Boolean!
+  updatePostLocale(project_id: ID!, post_id: ID!, locale_id: String!, title: String!, body: String!): Boolean!
+  deletePostLocale(project_id: ID!, post_id: ID!, locale_id: String!): Boolean!
+  savePostTemplate(project_id: ID!, post_template_id: ID, title: String!, body: String!): PostTemplate!
+  deletePostTemplate(project_id: ID!, post_template_id: ID!): Boolean!
+  saveFeed(project_id: ID!, feed_id: ID, name: String, custom_host: String, website: String, color: String, is_disabled: Boolean, is_unindexed: Boolean, is_private: Boolean, is_readmore: Boolean, is_rate_limited: Boolean, html_inject: String, metadata: JSONObject, theme: JSONObject, version: Int): Feed!
+  verifyCname(feed_id: ID!, custom_host: String!): Boolean!
+  ensureWidget(project_id: ID!, mode: String!): Widget!
+  saveWidget(project_id: ID!, widget_id: ID, mode: String!, name: String, action: String!, options: JSONObject!, theme: JSONObject, version: Int, ga_cookie_status: String!, content_to_show: String!, type: String, layout: String): Widget!
+  saveWidgetTheme(project_id: ID!, widget_id: ID!, theme: JSONObject!, type: String): Widget!
+  deleteWidget(project_id: ID!, widget_id: ID!): Result!
+  uninstallIntegration(integration_id: ID!): Result!
+  updateIntegration(integration_id: ID!, options: JSONObject!): Boolean!
+  getJiraConfigurations(integration_id: ID!, board_id: String!): JiraConfiguration!
+  searchForReporter(integration_id: ID!, query: String!, board_id: String!): [ReportersResponse!]!
+  sendJiraTicket(feature_request_id: ID!): Boolean!
+  getJiraTicket(feature_request_id: ID!): GetJiraTicketResponse!
+  getJiraBoards(integration_id: ID!): [ProjectsResponse!]!
+  importHeadway(project_id: ID!, url: String!, draft: Boolean!): Result!
+  importBeamer(project_id: ID!, token: String!, url: String!, draft: Boolean!): Result!
+  importGitHub(project_id: ID!, url: String!, continuous: Boolean!, draft: Boolean!): Result!
+  importReleaseNotes(project_id: ID!, url: String!, draft: Boolean!): Result!
+  importNoticeable(project_id: ID!, url: String!, draft: Boolean!): Result!
+  stopImport(project_id: ID!, import_id: ID!): Import!
+  saveSamlConfig(project_id: ID!, login_url: String, certificate: String, force_login_sso: Boolean): SAMLConfig!
+  verifySamlDomain(project_id: ID!, domain: String!): SAMLConfig!
+  createCoupons(prefix: String, plan_id: String!, count: Int): [String!]!
+  reactToPost(user_id: String, post_id: ID!, reaction: String, fields: JSONObject, source: ActionSource = widget): ReactToPostResult!
+  feedbackToPost(user_id: String, post_id: ID!, feedback: String!, fields: JSONObject, source: ActionSource = widget): FeedbackToPostResult!
+  subscribeToProject(user_id: String, project_id: ID!, email: String!, fields: JSONObject, source: ActionSource = widget): SubscribeToProjectResult!
+  requestAccess(project_id: String!, email: String!): Boolean!
+  feedbackToNps(user_id: String, post_id: ID!, feedback: String, score: Int!, fields: JSONObject, source: ActionSource = nps): FeedbackToNpsResult!
+  trackKnowledgeBaseArticleView(project_id: ID!, article_id: ID!): Boolean!
+  voteKnowledgeBaseArticle(project_id: ID!, article_id: ID!, helpful: Boolean!): Boolean!
+  voteFeatureRequestPublic(feature_request_id: ID!, isUnvote: Boolean = false, source: ActionSource = widget): Boolean
+  commentFeatureRequestPublic(feature_request_id: ID!, content: String!, source: ActionSource = widget): PublicFeatureRequestComment!
+  proposeFeatureRequestPublic(title: String!, summary: String, labels: [ID!], source: ActionSource = widget): PublicFeatureRequest!
+  removeExternalUser(project_id: ID!, external_user_id: ID!): Boolean!
+  sendTestEmail(project_id: ID!, post_id: ID): Boolean!
+  createSegmentProfile(project_id: ID!, title: String!, rules: JSONObject!): SegmentProfile!
+  editSegmentProfile(project_id: ID!, title: String!, rules: JSONObject!): SegmentProfile!
+  removeSegmentProfile(project_id: ID!, title: String!): Boolean!
+  sendImplementationEmail(project_id: ID!, inline_code: String, code: String, email: String!): Boolean!
+  markOnboardingStepAsCompleted(project_id: ID!, step_key: String!): Boolean!
+  unmarkOnboardingStepAsCompleted(project_id: ID!, step_key: String!): Boolean!
+  saveOnboardingAnswers(project_id: ID!, answers: JSONObject!): Boolean!
+  deleteOnboardingSampleContent(project_id: ID!): Boolean!
+  saveEmailConfig(project_id: ID!, send_day: Int!, sending_interval: String!, filter_labels: [String!], include_labels: [String!], include_segmented_posts: Boolean, post_content_type: String, is_enabled: Boolean): EmailConfig!
+  markWarningAsSeen(id: ID!, project_id: ID!): Boolean!
+  deleteActivity(project_id: ID!, id: ID!): Boolean!
+  autoGeneratePostContents(project_id: ID!, locale_id: ID!, type: String!, options: JSONObject!, temperature: Float): [AutoGeneratedPostContent!]!
+  saveProjectEmailSenderConfig(input: SaveProjectEmailSenderConfigInput!): ProjectEmailSenderConfig
+  testEmailSenderConfig(input: SaveProjectEmailSenderConfigInput!): EmailSenderTestResult!
+  importExternalUsers(input: ImportExternalUsersInput!): ImportExternalUsersResult!
+  saveProjectRoadmapConfig(input: SaveProjectRoadmapConfigInput!): ProjectRoadmapConfig!
+  saveProjectFeatureRequestConfig(input: SaveProjectFeatureRequestConfigInput!): ProjectFeatureRequestConfig!
+  saveProjectFeatureRequestSegmentation(project_id: ID!, segment_filters: JSONObject): ProjectFeatureRequestConfig!
+  saveIssue(project_id: ID!, issue_id: ID, user_id: ID, status_id: ID!, title: String!, summary: String, due_at: Date, labels: [ID!], sort_index: Int = 0): Issue!
+  saveIssueOrder(project_id: ID!, issue_order_list: [IssueOrderInput!]): Result!
+  deleteIssue(project_id: ID!, issue_id: ID!): Boolean!
+  saveStatus(project_id: ID!, status_id: ID, name: String!, color: String!): Status
+  saveStatusOrder(project_id: ID!, status_ids: [ID!]!): [Status!]!
+  deleteStatus(project_id: ID!, status_id: ID!): Result!
+  saveFeatureRequest(project_id: ID!, feature_request_id: ID, user_id: ID, issue_id: ID, title: String!, summary: String, labels: [ID!], is_archived: Boolean, is_internal: Boolean, is_approved: Boolean, segment_filters: JSONObject, contents: [FeatureRequestContentInput!]!): FeatureRequest!
+  commentFeatureRequest(project_id: ID!, feature_request_id: ID!, feature_request_comment_id: ID, content: String!, status: String): FeatureRequest!
+  deleteFeatureRequest(project_id: ID!, feature_request_id: ID!): Boolean!
+  deleteFeatureRequestComment(project_id: ID!, feature_request_id: ID!, feature_request_comment_id: ID!): FeatureRequest!
+  replyFeatureRequest(project_id: ID!, feature_request_id: ID!, content: String, subject: String): FeatureRequest!
+  replyFeatureRequestToSubscribers(project_id: ID!, feature_request_id: ID!, content: String, subject: String, subscribers: String): FeatureRequest!
+  deleteFeatureRequestVote(project_id: ID!, feature_request_id: ID!, external_user_id: ID!): Boolean!
+  mergeFeatureRequest(project_id: ID!, feature_request_id: ID!, merged_feature_request_id: ID!): Boolean!
+  saveKnowledgeBaseFolder(project_id: ID!, folder_id: ID, icon: String, parent_folder_id: ID, sort_index: Int, contents: [KnowledgeBaseFolderContentInput!]!): KnowledgeBaseFolder!
+  deleteKnowledgeBaseFolder(project_id: ID!, folder_id: ID!): Boolean!
+  reorderKnowledgeBaseFolders(project_id: ID!, folder_ids: [ID!]!, parent_folder_id: ID): Boolean!
+  reorderKnowledgeBaseArticles(project_id: ID!, folder_id: ID, article_ids: [ID!]!): Boolean!
+  generateKnowledgeBaseArticleSummary(project_id: ID!, title: String!, body: String!): String!
+  generateKnowledgeBaseArticleSeo(project_id: ID!, title: String, body: String): KnowledgeBaseSeoSuggestion!
+  translateKnowledgeBaseArticleContent(project_id: ID!, target_language: String!, title: String, body: String, summary: String): KnowledgeBaseTranslation!
+  saveKnowledgeBaseArticle(project_id: ID!, article_id: ID, folder_id: ID, is_draft: Boolean, slug: String, seo_title: String, seo_description: String, publish_at: Date, owner_id: ID, is_archived: Boolean, label_ids: [ID!], related_article_ids: [ID!], related_issue_ids: [ID!], related_feature_request_ids: [ID!], contents: [KnowledgeBaseArticleContentInput!]!): KnowledgeBaseArticle!
+  deleteKnowledgeBaseArticle(project_id: ID!, article_id: ID!): Boolean!
+  bulkUpdateKnowledgeBaseArticles(project_id: ID!, article_ids: [ID!]!, action: String!, folder_id: ID): Boolean!
+  importKnowledgeBaseFromIntercom(project_id: ID!, token: String!): KnowledgeBaseImportResult!
+  getFeatureRequestTicket(feature_request_id: ID!, project_id: ID!): FeatureRequestResponse!
+  regenerateFeatureRequestTicket(feature_request_id: ID!, project_id: ID!): FeatureRequestResponse!
+  saveFreqVoteModifications(feature_request_id: ID!, project_id: ID!, count: Int!, source: String): FeatureRequestVoteModification!
+  deleteFreqVoteModifications(feature_request_vote_modification_id: ID!, project_id: ID!): Boolean!
+  getCelloToken(productUserId: ID!): CelloTokenResponse!
+  saveUnsubscribeFeedback(project_id: ID!, user_id: ID!, reason: String!, improve_feed_back: String): UnsubscribeFeedback!
+  saveUserSetting(project_id: ID!, user_id: ID!, freq_submission: Boolean!, freq_new_comment: Boolean!, freq_new_upvote: Boolean!, post_feedback: Boolean!, post_reaction: Boolean!): UserSetting!
+  aiActions(project_id: ID!, actionType: String!, text: String!): AIActionResponse!
+}
+
+
+type Notification {
+  id: ID!
+  project_id: ID!
+  post_id: ID!
+  options: JSONObject!
+  interaction: String!
+  type: String!
+  url: String
+}
+
+
+type Nps {
+  id: ID!
+  project_id: ID!
+  post_id: ID!
+  options: JSONObject!
+  interaction: String!
+  skip_reason: Boolean!
+  follow_up_question: String!
+}
+
+
+type NpsStat {
+  nps_score: Float!
+  promoters_percentage: Float!
+  detractor_percentage: Float!
+  passive_percentage: Float!
+  promoters_count: Float!
+  detractor_count: Float!
+  passive_count: Float!
+  total_score_last_three_month: Float!
+  npsStatPeriodically: [NpsStatsPeriodically]!
+}
+
+
+type NpsStatScore {
+  nps_score: Float
+  promoters_percentage: Float
+  detractor_percentage: Float
+  passive_percentage: Float
+  promoters_count: Float
+  detractor_count: Float
+  passive_count: Float
+}
+
+
+type NpsStatsPeriodically {
+  date: Date
+  nps_score: Float
+  promoters_percentage: Float
+  detractor_percentage: Float
+  passive_percentage: Float
+}
+
+
+type Onboarding {
+  progress: Int!
+  items: [OnboardingStep]!
+}
+
+
+type OnboardingStep {
+  step_key: String!
+  index: Int!
+  is_done: Boolean!
+  is_active: Boolean!
+  title: String!
+  description: String!
+  target_url: [QuickStartControllers!]
+  time: String!
+}
+
+
+type OnboardingV2 {
+  items: [String]!
+}
+
+
+type OnboardingV5 {
+  answers: JSONObject
+  done_steps: [String!]!
+  widget_slug: String
+  widget_embedded: Boolean!
+  embed_hosts: [String!]!
+  has_sample_content: Boolean!
+  own_post_created: Boolean!
+}
+
+
+type PageOfActivities {
+  items: [Activity!]!
+  page: Int!
+  pages: Int!
+  count: Int!
+}
+
+
+type PageOfAuditlog {
+  items: [Auditlog!]!
+  page: Int!
+  pages: Int!
+  count: Int!
+}
+
+
+type PageOfExternalUsers {
+  page: Int!
+  pages: Int!
+  count: Int
+  items: [ExternalUser]!
+}
+
+
+type PageOfFeedback {
+  page: Int!
+  pages: Int!
+  count: Int!
+  items: [Feedback]!
+}
+
+
+type Plan {
+  id: ID!
+  group: String
+  name: String!
+  hasCustomLabels: Boolean!
+  hasCustomDomains: Boolean!
+  hasWhiteLabel: Boolean!
+  hasTeam: Boolean!
+  hasPrivacy: Boolean!
+  hasSubscriptions: Boolean!
+  hasFeedback: Boolean!
+  hasUserTracking: Boolean!
+  hasSegmentation: Boolean!
+  hasCustomCSS: Boolean!
+  hasIntegrations: Boolean!
+  hasPostCustomization: Boolean!
+  hasMultiLanguage: Boolean!
+  hasThemes: Boolean!
+  hasBoosters: Boolean!
+  hasSaml: Boolean!
+  hasIPAccessControl: Boolean!
+  hasEmailDigest: Boolean!
+  hasFeatureRequest: Boolean!
+  hasJiraIntegration: Boolean!
+  hasNotify: Boolean!
+  hasNps: Boolean!
+  hasTeamManagement: Boolean!
+  hasKnowledgeBase: Boolean!
+  hasAuditLog: Boolean!
+  interval: String!
+  price: Int!
+  setup_price: Int!
+  paddle: JSONObject
+  bullets: [String!]!
+}
+
+
+type Post {
+  id: ID!
+  project_id: ID!
+  user_id: ID
+  project: Project!
+  user: User
+  created_at: Date!
+  visible_at: Date!
+  image_id: ID
+  expire_at: Date
+  updated_at: Date!
+  is_draft: Boolean!
+  is_pushed: Boolean!
+  is_pinned: Boolean!
+  is_internal: Boolean!
+  is_feedback_disabled: Boolean!
+  external_url: String
+  labels: [PostLabel!]!
+  kb_articles: [KnowledgeBaseArticle!]!
+  related_roadmap: [RelatedRoadmapItem!]!
+  related_feature_requests: [RelatedFeatureRequest!]!
+  segment_filters: JSONObject
+  flags: [String!]!
+  defaultContent: PostContent!
+  contents: [PostContent!]!
+  view_data: JSONObject
+  status: String
+  is_paused: Boolean
+  nps: NpsStatScore
+  notification: Notification
+  is_sample: Boolean
+}
+
+
+type PostContent {
+  post_id: ID!
+  locale_id: String!
+  title: String!
+  body: String!
+  summary: String
+  slug: String!
+  url: String!
+  name: String
+}
+
+
+type PostEmailStats {
+  sent: Int!
+  delivered: Int!
+  opened: Int!
+  clicked: Int!
+}
+
+
+type PostLabel {
+  post_id: ID!
+  label_id: ID!
+  post: Post!
+  label: Label!
+}
+
+
+type PostTemplate {
+  id: ID!
+  title: String!
+  body: String!
+}
+
+
+type Posts {
+  list: [Post!]!
+  count: Int!
+  page: Int!
+  pages: Int!
+}
+
+
+type PostsResponseId {
+  id: Int!
+}
+
+
+type ProductDetailsResponse {
+  description: String!
+  user_persona: String
+  url: String
+}
+
+
+type Project {
+  id: ID!
+  encodedId: ID!
+  name: String!
+  slug: String!
+  website: String
+  is_authors_listed: Boolean!
+  is_whitelabel: Boolean!
+  is_subscribable: Boolean!
+  is_slack_subscribable: Boolean!
+  is_feedback_enabled: Boolean!
+  is_unknown_feedback_enabled: Boolean!
+  disable_google_fonts: Boolean!
+  is_demo: Boolean!
+  is_readonly: Boolean!
+  has_knowledge_base: Boolean!
+  can_view_auditlog: Boolean!
+  image_id: ID
+  favicon_id: ID
+  image: Image
+  created_at: Date!
+  ga_property: String
+  privacy_policy_url: String
+  members: [ProjectMember!]!
+  invites: [Invite!]!
+  labels: [Label!]!
+  statuses: [Status!]!
+  billing_info: BillingInfo
+  subscription: Subscription
+  avatar: String!
+  favicon: String
+  plan: Plan!
+  locale: String!
+  locales: [ProjectLocale!]!
+  feeds: [Feed!]!
+  integrations: [Integration!]!
+  analytics(date_from: String!, date_to: String!): Analytics
+  usesNewFeedHostname: Boolean
+  payment_gateway: String!
+  paddle_customer_id: String
+  trial_until: Date
+  metadata: JSONObject!
+  widget: Widget
+  additionalPlan: [AdditionalPlan]
+}
+
+
+type ProjectDetails {
+  id: ID!
+  project_id: ID!
+  url: String!
+  description: String!
+  user_persona: String!
+}
+
+
+type ProjectEmailSenderConfig {
+  project_id: ID!
+  provider: String!
+  sender_name: String
+  sender_email: String
+  sender_domain: String
+  provider_endpoint: String
+  provider_api_key: String
+  provider_username: String
+  provider_password: String
+  email_reply_to: String
+}
+
+
+type ProjectFeatureRequestConfig {
+  project_id: ID!
+  is_enabled: Boolean!
+  is_hidden_in_feed: Boolean!
+  is_hidden_in_widget: Boolean!
+  is_approvement_enabled: Boolean!
+  is_default_status_private: Boolean!
+  is_comments_public: Boolean!
+  is_category_public: Boolean!
+  segment_filters: JSONObject
+  button_name: String
+  is_hidden_based_on_segment: Boolean
+}
+
+
+type ProjectLocale {
+  id: ID!
+  project_id: ID!
+  locale_id: ID!
+  overrides: [LocaleEntry!]!
+  project: Project!
+  locale: Locale
+}
+
+
+type ProjectMember {
+  id: ID!
+  user_id: ID!
+  project_id: ID!
+  user: User!
+  project: Project!
+  member_role: String!
+}
+
+
+type ProjectRoadmapConfig {
+  project_id: ID!
+  title: String
+  is_enabled: Boolean!
+  is_hidden_in_feed: Boolean!
+  is_hidden_in_widget: Boolean!
+}
+
+
+type ProjectSegment {
+  id: String!
+  project_id: ID!
+  type: SegmentType!
+}
+
+
+type ProjectWarning {
+  id: ID!
+  created_at: Date!
+  project_id: ID!
+  event_vars: JSONObject!
+}
+
+
+type ProjectWebhook {
+  id: ID!
+  project_id: ID!
+  is_enabled: Boolean!
+  url: String!
+}
+
+
+type ProjectsResponse {
+  id: String!
+  name: String!
+  key: String!
+}
+
+
+type PublicFeatureRequest {
+  id: ID!
+  project_id: ID!
+  created_at: Date!
+  updated_at: Date!
+  title: String!
+  summary: String
+  user_info: UserInfo
+  stats: FeatureRequestStats!
+  comments: [PublicFeatureRequestComment!]!
+  labels: [FeatureRequestLabel!]
+}
+
+
+type PublicFeatureRequestComment {
+  id: ID!
+  project_id: ID!
+  feature_request_id: ID!
+  created_at: Date!
+  content: String!
+  status: String!
+  user_info: UserInfo
+  is_admin: Boolean
+}
+
+
+type Query {
+  dangerZonePresence(project_id: ID!): DangerZonePresence!
+  me: User
+  accessTokens(project_id: ID!): [AccessToken!]!
+  myConnectedApps: [ConnectedApp!]!
+  userProjectRole(projectId: ID!): UserProjectRole!
+  project(project_id: ID!): Project!
+  post(project_id: ID!, post_id: ID!): Post!
+  posts(project_id: ID!, page: Int = 0, labels: [ID!], query: String, createdBy: Int, postStatus: String, orderField: String, enabledFeature: String): Posts!
+  postTemplates(project_id: ID!): [PostTemplate!]!
+  feedbackCounts(project_id: ID!, post_id: ID, date_range: DateRange, segmentProfile: JSONObject): [FeedbackCount!]!
+  feedbackHappinessTable(project_id: ID!, post_id: ID): [[Float]!]!
+  feedbacks(project_id: ID!, post_id: ID, page: Int = 0): PageOfFeedback!
+  NpsFeedback(project_id: ID!, post_id: ID, date_range: DateRange, segmentProfile: JSONObject, page: Int = 0): PageOfFeedback!
+  activities(project_id: ID!, post_id: ID, external_user_id: ID, page: Int = 0, type: [String!], segmentProfile: JSONObject, postType: String, search: String): PageOfActivities!
+  activitiesViews(project_id: ID!, post_id: ID, external_user_id: ID, page: Int = 0, type: [String!], segmentProfile: JSONObject): PageOfActivities!
+  activitiesClicks(project_id: ID!, post_id: ID, external_user_id: ID, page: Int = 0, type: [String!], segmentProfile: JSONObject): PageOfActivities!
+  unreadActivities(project_id: ID!): UnreadActivities!
+  checkEmailDigest(project_id: ID!): EmailDigestStatus
+  postEmailStats(project_id: ID!, post_id: ID!): PostEmailStats!
+  auditlog(project_id: ID!, page: Int = 0): PageOfAuditlog!
+  feed(project_id: ID!, feed_id: ID!): Feed!
+  feeds(project_id: ID!): [Feed!]!
+  widget(project_id: ID!, widget_id: ID!): Widget!
+  widgets(project_id: ID!): [Widget!]!
+  getWidgetByType(project_id: ID!, type: String!): Widget!
+  import(project_id: ID!, import_id: ID!): Import!
+  imports(project_id: ID!): [Import!]!
+  labels(project_id: ID!): [Label!]!
+  segments(project_id: ID!): [String!]!
+  segmentProfiles(project_id: ID!): [SegmentProfile!]!
+  externalUsers(project_id: ID!, filters: JSONObject, page: Int = 0, sortField: ExternalUserSortField = SEEN_AT, sortOrder: SortOrder = DESC): PageOfExternalUsers!
+  externalUserCount(project_id: ID!, filters: JSONObject): AudienceCount
+  externalUser(project_id: ID!, external_user_id: ID!): ExternalUser
+  getUnreadCount(project_id: ID!, external_user_id: ID!): UnreadPostsResponse!
+  analytics(project_id: ID!, startDate: String!, endDate: String!): Analytics
+  analyticsChart(project_id: ID!, startDate: String!, endDate: String): AnalyticsChart
+  analyticsPost(project_id: ID!, startDate: String!, endDate: String): AnalyticsPost
+  analyticsv3(input: AnalyticsInput!): AnalyticsReport!
+  getPostStatistics(input: AnalyticsInput!): AnalyticsReport!
+  getFeatureRequestViewStatistics(input: AnalyticsInput!): AnalyticsReport!
+  getLatestActivities(project_id: ID!): AnalyticsLatestActivitiesResponse!
+  getPostStatus(project_id: ID!, date_range: DateRange!): CreatedPostsResponse!
+  getCreatedFeatureRequestsStats(project_id: ID!, date_range: DateRange!, segment_filters: JSONObject): CreatedFeatureRequestsResponse!
+  getAllFeatureRequestsStats(project_id: ID!, date_range: DateRange!, segment_filters: JSONObject): FeatureRequestsStatsResponse!
+  getEmailStats(project_id: ID!, date_range: DateRange!, segment_filters: JSONObject): EmailStatsResponse!
+  topPerformingEmails(project_id: ID!, date_range: DateRange!, segment_filters: JSONObject): [TopPerformingResponse]!
+  getTopActiveUsers(input: AnalyticsInput!): AnalyticsReport!
+  getBoosterChartStats(project_id: ID!, date_range: DateRange!): BoosterStatsResponse!
+  getBoosterStats(input: AnalyticsInput!): AnalyticsReport!
+  getTopPerformingBoosters(input: AnalyticsInput!): AnalyticsReport!
+  image(image_id: ID!): Image!
+  checkSubscriptionPlan(project_id: ID!, coupon: String): [Plan]!
+  plans(filters: String): [Plan!]!
+  invoices(project_id: ID!, additional_plan: Boolean = false): [Invoice!]!
+  projectLocale(project_id: ID!, locale_id: ID!): ProjectLocale
+  projectLocales(project_id: ID!): [ProjectLocale!]!
+  projectWebhooks(project_id: ID!): [ProjectWebhook!]!
+  samlConfig(project_id: ID!): SAMLConfig!
+  samlLoginURL(domain: String!): SSOLogin
+  projectSecret(project_id: ID!): String!
+  locale(locale_id: ID!): Locale!
+  locales: [Locale!]!
+  users(page: Int = 0): [User!]!
+  checkActiveFeatures(project_id: ID!): Features!
+  onboarding(project_id: ID!): Onboarding!
+  onboardingV2(project_id: ID!, type: String): OnboardingV2!
+  onboardingV5(project_id: ID!): OnboardingV5!
+  emailConfig(project_id: ID!): EmailConfig!
+  projectEmailSenderConfig(project_id: ID!): ProjectEmailSenderConfig!
+  projectRoadmapConfig(project_id: ID!): ProjectRoadmapConfig!
+  projectFeatureRequestConfig(project_id: ID!): ProjectFeatureRequestConfig!
+  projectWarnings(project_id: ID!): [ProjectWarning!]
+  workspaceCreationEligibility: WorkspaceEligibility!
+  projectMagicInviteLink(project_id: ID!): String!
+  previewPost(project_id: ID!, content: PostContentInput!, user_id: ID, image_id: ID, labels: [ID!], flags: [String!]): JSONObject!
+  statuses(project_id: ID!): [Status!]!
+  issues(project_id: ID!, page: Int = 0, labels: [ID!], statuses: [ID!], query: String): Issues!
+  roadmapItems(project_id: ID!, query: String, page: Int = 0): RoadmapItems!
+  featureRequests(project_id: ID!, page: Int = 0, sort_by: FeatureRequestSortBy! = NEW, sort_order: SortOrder! = DESC, query: FeatureRequestQuery, fields: JSONObject, user_id: String, locale: String): FeatureRequests!
+  featureRequestReplies(project_id: ID!, feature_request_id: ID!): [FeatureRequestReply!]!
+  knowledgeBaseFolders(project_id: ID!): [KnowledgeBaseFolder!]!
+  knowledgeBaseArticles(project_id: ID!, folder_id: ID, label_id: ID, query: String, page: Int, status: String): KnowledgeBaseArticles!
+  knowledgeBaseArticle(project_id: ID!, article_id: ID!): KnowledgeBaseArticle!
+  knowledgeBaseArticleRevisions(project_id: ID!, article_id: ID!, page: Int): KnowledgeBaseArticleRevisions!
+  knowledgeBaseAnalytics(project_id: ID!, days: Int, start_date: String, end_date: String): KnowledgeBaseAnalytics!
+  exportKnowledgeBase(project_id: ID!): String!
+  searchKnowledgeBasePublic(project_id: ID!, query: String!, locale_id: String): [KnowledgeBaseSearchResult!]!
+  projectMembers(project_id: ID!): [ProjectMember!]!
+  getProjectDetails(project_id: ID!): ProjectDetails!
+  getNotification(project_id: ID!, post_id: ID!): Notification!
+  getNps(project_id: ID!, post_id: ID!): Nps!
+  onboardingDiscountCode(project_id: ID!): String
+  getUserSetting(project_id: ID!, user_id: ID!): UserSetting!
+}
+
+
+type QuickStartControllers {
+  name: String!
+  value: String!
+  forceReload: Boolean
+  error: String
+}
+
+
+type ReactToPostResult {
+  user_id: ID!
+  post_id: ID!
+  reaction: String
+}
+
+
+type RelatedFeatureRequest {
+  id: ID!
+  title: String!
+}
+
+
+type RelatedRoadmapItem {
+  id: ID!
+  title: String!
+  status: String
+}
+
+
+type ReportersResponse {
+  accountId: String!
+  displayName: String!
+}
+
+
+type Result {
+  type: String!
+  message: String
+}
+
+
+type RoadmapItems {
+  list: [RelatedRoadmapItem!]!
+  count: Int!
+  page: Int!
+  pages: Int!
+}
+
+
+type SAMLConfig {
+  id: ID!
+  project_id: ID!
+  route: String!
+  login_url: String
+  certificate: String
+  domain: String
+  is_domain_verified: Boolean
+  verify_token: String!
+  force_login_sso: Boolean
+}
+
+
+type SSOLogin {
+  login_url: String!
+  force_login_sso: Boolean
+}
+
+
+type SegmentProfile {
+  project_id: ID!
+  title: String!
+  rules: JSONObject
+}
+
+
+type Status {
+  id: ID!
+  name: String!
+  color: String!
+}
+
+
+type SubscribeToProjectResult {
+  user_id: ID!
+  email: String!
+}
+
+
+type Subscription {
+  id: ID!
+  started_at: Date!
+  period_started_at: Date!
+  period_ending_at: Date!
+  status: String!
+  metadata: JSONObject
+}
+
+
+type TOTPConfig {
+  id: ID!
+  user_id: ID!
+  qr_code: String!
+  recovery_codes: [String!]!
+}
+
+
+type TopPerformingResponse {
+  post_id: Int!
+  sent_count: Int!
+  opened_count: Int!
+  link_clicked: Int!
+  title: String!
+}
+
+
+type UnreadActivities {
+  id: ID!
+  count: Int!
+}
+
+
+type UnreadPostsResponse {
+  totalCount: Int!
+  posts: [PostsResponseId]!
+}
+
+
+type UnsubscribeFeedback {
+  id: ID!
+  project_id: ID!
+  user_id: ID!
+  reason: String!
+  improve_feed_back: String
+  created_at: String
+  updated_at: String
+}
+
+
+type User {
+  id: ID!
+  hash: String!
+  email: String!
+  display_name: String
+  title: String
+  created_at: Date!
+  image_id: ID
+  image: Image
+  active_project: Project
+  memberships: [ProjectMember!]!
+  avatar: String!
+  is_validated: Boolean!
+  is_totp_enabled: Boolean!
+  is_unsubs: Boolean!
+}
+
+
+type UserInfo {
+  id: ID!
+  name: String!
+  avatar: String!
+  email: String
+}
+
+
+type UserProjectRole {
+  role: String!
+  permissions: [String!]!
+  hasTeamManagement: Boolean!
+}
+
+
+type UserSetting {
+  user_id: ID!
+  freq_submission: Boolean!
+  freq_new_comment: Boolean!
+  freq_new_upvote: Boolean!
+  post_feedback: Boolean!
+  post_reaction: Boolean!
+  created_at: Date!
+}
+
+
+type Widget {
+  id: ID!
+  project_id: ID!
+  project: Project!
+  created_at: Date!
+  name: String!
+  mode: String!
+  action: String!
+  slug: String!
+  options: JSONObject!
+  theme: JSONObject!
+  version: Int!
+  ga_cookie_status: String!
+  content_to_show: String!
+  type: String
+  layout: String
+}
+
+
+type WorkspaceEligibility {
+  can_create: Boolean!
+  reason: String!
+  paid_count: Int!
+  free_trial_count: Int!
+  owned_count: Int!
+}
+
+"Date custom scalar type"
+scalar Date
+
+"JSON Object string"
+scalar JSONObject

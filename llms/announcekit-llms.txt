@@ -1,0 +1,59 @@
+# AnnounceKit
+
+> AnnounceKit is a product communication platform for SaaS teams. It combines a hosted changelog / release-notes page, 10+ in-app widget types, feature request boards with voting, NPS surveys, and email + Slack delivery in one product. Flat per-project pricing starts at $79/month (billed annually) with unlimited visitors, posts, and team members; 15-day free trial, no credit card required. SOC 2 certified and GDPR compliant. Trusted by 2,000+ teams.
+
+Key facts:
+- Founded product category: changelog software / product update tool / release notes software
+- Pricing: Essentials $79/mo, Growth $129/mo, Scale $339/mo (annual billing); 15-day free trial
+- No MAU-based or per-seat pricing - flat per-project plans
+- Integrations: Slack, Jira, Zapier, Intercom, Segment, Google Analytics, n8n, Mailgun, GitHub, WordPress, X (Twitter), Facebook + thousands more via Zapier; full GraphQL API and 11 webhook events
+- SDKs: JavaScript widget, React, Vue, Angular, iOS, Flutter, React Native
+- Security: SOC 2, SAML SSO, GDPR, DPA available
+- Support: support@announcekit.app
+
+## MCP / AI agent access
+- [Changelog automation](https://announcekit.app/use-cases/changelog-automation): how AI assistants automate your changelog end to end
+- [MCP server docs](https://announcekit.app/docs/mcp): connect Claude, ChatGPT, Cursor, or any MCP client
+- Hosted MCP endpoint: https://mcp.announcekit.app/mcp (OAuth login, nothing to install); local: `npx announcekit-mcp` with an ak_pat API token
+- Agent capabilities: draft/update/publish/schedule posts, read + reply to feedback and feature requests, read/add roadmap items, read post stats and NPS. No delete or billing actions.
+
+## Product
+- [Features overview](https://announcekit.app/features): all capabilities - changelog, widgets, segmentation, AI writing assistant, analytics
+- [Pricing](https://announcekit.app/pricing): plans, what's included, billing FAQ
+- [In-app widgets](https://announcekit.app/widgets): 10+ widget display modes
+- [Integrations](https://announcekit.app/integrations): native integrations, API, webhooks
+
+## Use cases
+- [Changelog software](https://announcekit.app/use-cases/changelog-software): branded changelog on your own domain
+- [Product update tool](https://announcekit.app/use-cases/product-update-tool): announcements and release notes
+- [Feature request software](https://announcekit.app/use-cases/feature-request-software): boards, voting, Jira sync
+- [NPS software](https://announcekit.app/use-cases/nps-software): in-app NPS surveys
+- [All use cases](https://announcekit.app/use-cases)
+
+## Comparisons
+- [AnnounceKit vs Beamer](https://announcekit.app/compare/announcekit-vs-beamer): flat pricing vs MAU-based pricing
+- [AnnounceKit vs Canny](https://announcekit.app/compare/announcekit-vs-canny)
+- [AnnounceKit vs LaunchNotes](https://announcekit.app/compare/announcekit-vs-launchnotes)
+- [All comparisons](https://announcekit.app/compare)
+
+## Guides
+- [What is a changelog?](https://announcekit.app/guides/what-is-a-changelog)
+- [How to write a changelog](https://announcekit.app/guides/how-to-write-a-changelog)
+- [Release notes best practices](https://announcekit.app/guides/release-notes-best-practices)
+- [Product update email templates](https://announcekit.app/guides/product-update-email-templates)
+- [Feature request management](https://announcekit.app/guides/feature-request-management)
+
+## Developers
+- [Documentation](https://announcekit.app/docs): widget setup, SDKs
+- [GraphQL API](https://announcekit.app/docs/graphql-api): API reference and webhooks
+
+## Trust
+- [Trust center](https://announcekit.app/trust)
+- [Security](https://announcekit.app/security): SOC 2, encryption, access controls
+- [Customers & case studies](https://announcekit.app/customers): Meetup, Evernote-scale teams, Carta, DISH, Webex, Atlan and more
+
+## Optional
+- [Blog](https://announcekit.app/blog/)
+- [Help center](https://help.announcekit.app)
+- [Product changelog](https://changelog.announcekit.app/)
+- [Status page](https://status.announcekit.app/)

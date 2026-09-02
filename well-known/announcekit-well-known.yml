@@ -1,0 +1,124 @@
+generated: '2026-09-02'
+method: probed
+source: >-
+  Direct unauthenticated GET of each /.well-known/ path on every AnnounceKit host
+  named in apis.yml, llms.txt and the MCP documentation (announcekit.app,
+  mcp.announcekit.app, help.announcekit.app, changelog.announcekit.app,
+  status.announcekit.app), 2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  Well-known document probe for AnnounceKit. Two paths serve real documents: the
+  RFC 8414 OAuth 2.0 Authorization Server Metadata on announcekit.app, and the
+  RFC 9728 OAuth 2.0 Protected Resource Metadata on the hosted MCP host. Both
+  back the AnnounceKit MCP OAuth login flow. Everything else 404s.
+hosts:
+- host: announcekit.app
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: well-known/announcekit-oauth-authorization-server.json
+    note: >-
+      RFC 8414 authorization server metadata. issuer https://announcekit.app,
+      authorization_code + refresh_token grants, PKCE S256, dynamic client
+      registration endpoint, scopes read and write.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: mcp.announcekit.app
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: well-known/announcekit-mcp-oauth-protected-resource.json
+    note: >-
+      RFC 9728 protected resource metadata. resource
+      https://mcp.announcekit.app/mcp, authorization_servers
+      [https://announcekit.app].
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: help.announcekit.app
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: >-
+      NOT AnnounceKit's. The help center is hosted by Intercom and the served
+      security.txt is Intercom's own (Canonical
+      https://app.intercom.com/.well-known/security.txt, Contact
+      https://bugcrowd.com/intercom). Recorded as a third-party document, not
+      saved, and no SecurityTxt pointer is emitted for AnnounceKit.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: changelog.announcekit.app
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    note: >-
+      MISS. The hosted changelog is a single-page app with a catch-all route: it
+      answers HTTP 200 with the same text/html shell for EVERY /.well-known/*
+      path, including agent-card.json, agent.json, security.txt, api-catalog,
+      openid-configuration and ai-plugin.json. Verified by reading the bodies -
+      each is <!DOCTYPE html>. No document is served here.
+  - path: /.well-known/security.txt
+    status: 200
+    note: SPA shell, not a document.
+  - path: /.well-known/api-catalog
+    status: 200
+    note: SPA shell, not a document.
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: SPA shell, not a document.
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    note: SPA shell, not a document.
+  - path: /.well-known/agent-card.json
+    status: 200
+    note: SPA shell, not an AgentCard. No A2A pointer emitted.
+  - path: /.well-known/agent.json
+    status: 200
+    note: SPA shell, not an AgentCard. No A2A pointer emitted.
+- host: status.announcekit.app
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

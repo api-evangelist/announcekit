@@ -1,0 +1,39 @@
+generated: '2026-09-02'
+method: generated
+source: >-
+  Authored from the MCP tool inventory in mcp/announcekit-mcp.yml and the live
+  GraphQL schema in graphql/announcekit-schema.graphql. Every operationId and
+  tool name referenced in these skills exists in one of those two artifacts.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  Packaged agent skills for AnnounceKit's three marquee flows. AnnounceKit
+  publishes no OpenAPI, so these are grounded in the MCP tool names from its own
+  published announcekit-mcp package and the GraphQL root fields those tools
+  call.
+skills:
+- name: announcekit-publish-release-note
+  file: skills/announcekit-publish-release-note.md
+  description: Draft, review and publish or schedule a release note, with localization and labels.
+  scope_required: write
+  surfaces: [mcp, graphql]
+- name: announcekit-triage-feature-requests
+  file: skills/announcekit-triage-feature-requests.md
+  description: Read the feature request board, reply to requesters, and promote accepted requests onto the roadmap.
+  scope_required: write
+  surfaces: [mcp, graphql]
+- name: announcekit-report-post-performance
+  file: skills/announcekit-report-post-performance.md
+  description: Pull reach, engagement, channel breakdown and NPS for announcements over a date range.
+  scope_required: read
+  surfaces: [mcp, graphql]
+provider_published_skills:
+  found: false
+  note: >-
+    No AGENTS.md, /skills directory or provider-authored agent skill was found
+    on announcekit.app, in either GitHub organization, or in the announcekit-mcp
+    package. These are API Evangelist generated skills, not vendor-published
+    ones.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

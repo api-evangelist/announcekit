@@ -1,0 +1,130 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://announcekit.app/docs, https://announcekit.app/widgets,
+  https://announcekit.app/pricing, the announcekitapp GitHub organization, and
+  the Widget type in the live GraphQL schema, 2026-09-02.
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  AnnounceKit's client-side surface is the product, not an accessory to it. The
+  embeddable widget is how end users see a changelog, and the framework packages
+  in packages/ are thin wrappers around one JavaScript loader. Distinct from the
+  SDK/package list: this file describes the embeddable UI, packages/ describes
+  the distribution.
+families:
+- name: In-app widget
+  type: embedded-ui
+  description: >-
+    A JavaScript-loaded surface embedded in the customer's own application,
+    attached to a container element. AnnounceKit markets "10+ widget display
+    modes"; the GraphQL Widget type carries mode, action, layout, type, slug,
+    options and theme, so the display style is configuration on one object
+    rather than a set of distinct components.
+  documented_modes:
+  - badge / launcher
+  - sidebar
+  - popup
+  - modal
+  - toaster
+  - snackbar
+  - top bar in-app notification
+  note: >-
+    The mode list above is taken from the pricing FAQ and the widgets page. The
+    schema does not enumerate modes as an enum - Widget.mode is a String - so
+    the authoritative set is documentation, not the contract.
+  configuration:
+    schema_fields: [mode, action, layout, type, slug, options, theme, version, content_to_show,
+      ga_cookie_status]
+    note: options and theme are JSONObject and are undocumented in shape.
+  loaders:
+  - name: JavaScript widget snippet
+    distribution: script tag
+    registry: cdn
+    version: null
+    note: >-
+      The base widget is loaded by an HTML snippet from AnnounceKit's own CDN.
+      The snippet is not version-pinned in the documented form, so a consumer
+      cannot tell which build they are running and cannot pin one - the widget
+      floats to whatever AnnounceKit serves. Recorded as version null because
+      the distribution is unpinned, not because it was unchecked.
+  - {name: announcekit-react, registry: npm, version: 3.2.0, published: '2023-01-18'}
+  - {name: announcekit-vue, registry: npm, version: 3.1.0, published: '2023-01-16'}
+  - {name: announcekit-angular, registry: npm, version: 14.0.5, published: '2023-02-22'}
+  - {name: announcekit-react-native, registry: npm, version: 2.0.7, published: '2024-01-29'}
+  - {name: announcekit_flutter, registry: pub.dev, version: 0.1.0, published: '2025-03-28'}
+  - {name: AnnounceKit (iOS), registry: cocoapods, version: 0.10.2, published: '2024-10-28'}
+  - name: announcekit-angularjs
+    registry: github
+    version: null
+    note: Legacy AngularJS wrapper, source-only, last pushed 2020-09-30.
+  customization:
+  - Changelog Theme Designer (all plans)
+  - Custom CSS (Scale and above)
+  - Remove AnnounceKit branding (Enterprise)
+  - Multi-language widget setup
+  authentication:
+    scheme: JWT
+    description: >-
+      Signed user tracking - the host app signs the end user's identity so the
+      widget can safely show targeted or private content.
+    documented: https://announcekit.app/docs/json-web-tokens
+- name: Hosted changelog page
+  type: hosted-surface
+  description: >-
+    A standalone, brandable changelog page served by AnnounceKit, optionally on
+    the customer's own domain with automatic SSL, and optionally private
+    (authenticated readers only) on Scale and above.
+  configuration:
+    schema_type: Feed
+    mutations: [saveFeed, verifyCname]
+  urls:
+    default: '<slug>.announcekit.app'
+    custom: Custom Changelog URL (Growth and above), Custom Domain + SSL
+  syndication: [RSS, Atom, JSON Feed]
+  example: https://changelog.announcekit.app/
+  note: AnnounceKit's own public changelog is an instance of this surface.
+- name: Feature request board
+  type: hosted-surface
+  description: >-
+    A public board where end users propose, vote on and comment on requests.
+    Backed by the public mutations voteFeatureRequestPublic,
+    commentFeatureRequestPublic and proposeFeatureRequestPublic, which are the
+    unauthenticated-visitor half of the API.
+  configuration:
+    schema_type: ProjectFeatureRequestConfig
+    mutations: [saveProjectFeatureRequestConfig, saveProjectFeatureRequestSegmentation]
+- name: Public roadmap
+  type: hosted-surface
+  description: A public board of Issue records grouped into Status columns.
+  configuration:
+    schema_type: ProjectRoadmapConfig
+    mutations: [saveProjectRoadmapConfig]
+  example: https://announcekit.app/product-roadmap
+- name: NPS survey
+  type: embedded-ui
+  description: >-
+    An in-app Net Promoter Score survey with a follow-up question and skip
+    handling. Sold as a separately priced product.
+  configuration:
+    schema_type: Nps
+    fields: [options, interaction, skip_reason, follow_up_question]
+- name: Tag manager template
+  type: integration-loader
+  description: >-
+    A Google Tag Manager custom tag template for deploying the widget without
+    touching application code.
+  repository: https://github.com/announcekitapp/announcekit-gtm-template
+  version: null
+  note: Distributed through the GTM community gallery, which exposes no version metadata.
+gaps:
+- >-
+  No web component. Every framework wrapper is a per-framework package rather
+  than a single custom element, which is why the family has six separately
+  versioned artifacts that have all gone quiet.
+- >-
+  The base JavaScript snippet is unpinned, so consumers cannot control which
+  widget build their users receive.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

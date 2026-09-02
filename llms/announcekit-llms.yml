@@ -1,0 +1,65 @@
+generated: '2026-09-02'
+method: probed
+source: https://announcekit.app/llms.txt
+provider: AnnounceKit
+providerId: announcekit
+description: >-
+  Probe record for AnnounceKit's agent-facing text surface. AnnounceKit publishes
+  a real, hand-written llms.txt AND an llms-full.txt - both served, both current.
+  The llms.txt is notable for being the first place the MCP endpoint URL is
+  stated in machine-readable form; it is how this enrichment pass found the
+  agent surface at all.
+documents:
+- path: /llms.txt
+  url: https://announcekit.app/llms.txt
+  http_status: 200
+  content_type: text/plain; charset=utf-8
+  bytes: 4040
+  file: llms/announcekit-llms.txt
+  fetched: '2026-09-02'
+  note: >-
+    Saved verbatim. Correctly formatted - H1, blockquote summary, sectioned link
+    lists with descriptions, and an Optional section. Carries an explicit
+    "MCP / AI agent access" section naming https://mcp.announcekit.app/mcp, the
+    npx announcekit-mcp local option, the ak_pat_ token prefix, and the agent
+    capability boundary ("No delete or billing actions").
+- path: /llms-full.txt
+  url: https://announcekit.app/llms-full.txt
+  http_status: 200
+  bytes: 5652
+  file: null
+  fetched: '2026-09-02'
+  note: >-
+    Served, and deliberately NOT committed to this repo - *-llms-full.txt is
+    gitignored because verbatim docs dumps routinely embed vendor example tokens
+    that trip push protection. Recorded here as a probe result only.
+- path: /docs/llms.txt
+  http_status: 404
+- path: /AGENTS.md
+  http_status: 404
+- path: /agents.md
+  http_status: 404
+- path: /.well-known/agents.md
+  http_status: 404
+robots:
+  url: https://announcekit.app/robots.txt
+  http_status: 200
+  note: >-
+    Disallows /widget/, /gq, /dashboard and /awesome-app-9/, and names
+    https://announcekit.app/sitemap.xml. NOTE that /gq is disallowed to
+    crawlers - that is the GraphQL API path. It is a crawl directive, not an
+    access control: a direct API call to https://announcekit.app/gq/v2 is the
+    documented way to use the API and is unaffected. No AI-specific user-agent
+    rules and no agent-differentiated policy were present.
+accuracy_check:
+  verdict: accurate
+  note: >-
+    Every claim in the llms.txt that this pass could check independently held
+    up: the MCP endpoint answers (401 without a token, i.e. it exists), the npm
+    package announcekit-mcp exists at 0.1.0, the GraphQL API is at the stated
+    place, the pricing figures match the pricing page, SOC 2 and GDPR match the
+    trust page, and 11 webhook events match the help center. No dead links and
+    no overclaims were found - which is not the norm.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
