@@ -2,15 +2,11 @@
   "repo": "announcekit",
   "feeds": [
     {
-      "source": "https://announcekit.app/blog/feed/",
-      "error": "TimeoutError"
-    },
-    {
-      "source": "http://announcekit.app/blog/",
+      "source": "https://announcekit.app/blog/",
       "error": "TimeoutError"
     }
   ],
-  "fetched": "2026-08-30T22:33:40Z",
+  "fetched": "2026-09-06T19:17:18Z",
   "post_count": 38,
   "feed_nature": "vendor-blog",
   "feed_nature_basis": "path_blog",
