@@ -3,10 +3,13 @@
   "feeds": [
     {
       "source": "https://announcekit.app/blog/",
-      "error": "TimeoutError"
+      "feed_url": "https://announcekit.app/blog/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "discovered"
     }
   ],
-  "fetched": "2026-09-13T13:00:00Z",
+  "fetched": "2026-09-19T20:17:39Z",
   "post_count": 38,
   "feed_nature": "vendor-blog",
   "feed_nature_basis": "path_blog",
