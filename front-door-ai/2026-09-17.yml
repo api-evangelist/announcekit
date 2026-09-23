@@ -1,0 +1,31 @@
+# Front Door AI Index — announcekit — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: announcekit
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: announcekit.app
+  final_host: announcekit.app
+  ownership: own
+  owner: announcekit
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 25
+  host_score: 25
+  density: 15.42
+  words: 1621
+  tiers:
+    agentic: 9
+    core: 7
+    model: 9
+  ambiguous: 6
+  top_terms:
+    MCP: 8
+    AI: 7
+    ChatGPT: 5
+    Claude: 4
+    agent: 3
+    automation: 3
+    AI agent: 1
