@@ -121,6 +121,10 @@ apis:
   - url: lifecycle/announcekit-lifecycle.yml
     type: Lifecycle
 common:
+- type: RateLimits
+  url: rate-limits/announcekit-rate-limits.yml
+- type: FinOps
+  url: finops/announcekit-finops.yml
 - type: TrustCenter
   url: security/announcekit-trust-center.yml
 - type: DomainSecurity
