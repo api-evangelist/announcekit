@@ -1,4 +1,4 @@
-# AnnounceKit (announcekit)
+# AnnounceKit
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,56 +66,137 @@
 
 AnnounceKit is a product communication platform providing changelog management, in-app notification widgets, feature request boards, roadmaps, and NPS surveys. It enables product teams to communicate updates to users via 10+ widget display modes, email digests, Slack, webhooks, and RSS, with GraphQL and REST APIs for programmatic integration.
 
-**URL:** [https://raw.githubusercontent.com/api-evangelist/announcekit/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/announcekit/refs/heads/main/apis.yml)
+**Areas:** Changelog · Feature Requests · NPS · Notification · Product Communication · Roadmaps · Software-as-a-Service · Widgets
 
-## Scope
+## AnnounceKit on APIs.io
 
-- **Type:** Index
-- **Access:** 3rd-Party
+Everything profiled for AnnounceKit is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/announcekit/](https://apis.io/providers/announcekit/)** — or go straight to one of the APIs or properties below.
 
-## Tags:
+### APIs (1)
 
- - Changelog, Feature Requests, NPS, Notifications, Product Communication, Roadmap, SaaS, Widgets
+- [AnnounceKit API](https://apis.io/apis/announcekit/announcekit-api/) — The AnnounceKit API provides GraphQL and REST endpoints for programmatically creating and updating posts, syncing user data, managing widgets, and…
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-03-29
-- **Modified:** 2026-04-19
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### AsyncAPI (1)
 
-### AnnounceKit API
+Event-driven and webhook contracts.
 
-The AnnounceKit API provides GraphQL and REST endpoints for programmatically creating and updating posts, syncing user data, managing widgets, and automating product changelog workflows. Supports 11 webhook event types for custom integrations. Available on all plans, it also offers SDKs for React, Vue, Angular, iOS, Flutter, and React Native.
+- [Announcekit Webhooks](https://apis.io/asyncapis/announcekit/announcekit-webhooks/)
 
-**Human URL:** [https://announcekit.app/docs](https://announcekit.app/docs)
+#### GraphQL (1)
 
-#### Tags:
+GraphQL schemas.
 
- - Changelog, Feature Requests, GraphQL, NPS, Notifications, Product Updates, REST, Webhooks, Widgets
+- [AnnounceKit GraphQL API](https://apis.io/graphqls/announcekit/announcekit-graphql/)
 
-#### Properties
+#### MCP servers (1)
 
-- [Documentation](https://announcekit.app/docs)
+Model Context Protocol servers that expose the API to agents.
+
+- [AnnounceKit MCP Server](https://apis.io/servers/announcekit/announcekit-mcp-server/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Announcekit Authentication](https://apis.io/security/announcekit/announcekit-authentication/)
+- [Announcekit Domain Security](https://apis.io/security/announcekit/announcekit-domain-security/)
+- [Announcekit Trust Center](https://apis.io/security/announcekit/announcekit-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Announcekit Scopes](https://apis.io/scopes/announcekit/announcekit-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Announcekit Plans Pricing](https://apis.io/plans/announcekit/announcekit-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Announcekit Rate Limits](https://apis.io/rate-limits/announcekit/announcekit-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Announcekit Finops](https://apis.io/finops/announcekit/announcekit-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://announcekit.app/)
-- [GraphQL](https://announcekit.app/docs/graphql)
-- [GitHub](https://github.com/announcekitapp)
-
-## Common Properties
-
-- [Website](https://announcekit.app/)
 - [Documentation](https://announcekit.app/docs)
-- [Features](https://announcekit.app/features)
 - [Pricing](https://announcekit.app/pricing)
+- [Sign up](https://announcekit.app/dashboard/register)
+- [Support](https://help.announcekit.app)
 - [Changelog](https://changelog.announcekit.app/)
-- [GitHubOrganization](https://github.com/announcekitapp)
-- [Features](https://announcekit.app/widgets)
-- [Examples](https://announcekit.app/examples)
-- [PrivacyPolicy](https://announcekit.app/privacy-policy)
-- [TermsOfService](https://announcekit.app/terms)
+- [Blog](https://announcekit.app/blog/)
+- [Terms of service](https://announcekit.app/terms-of-service)
+- [Privacy policy](https://announcekit.app/privacy-policy)
+- [GitHub](https://github.com/announcekitapp)
+- [Status](https://status.announcekit.app/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
+**Kin Score 62.9** — strong · rubric 0.25.0 · scored 2026-10-23
 
-**Email:** kin@apievangelist.com
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 52.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 71.1 |
+| Developer ergonomics | 44.6 |
+| Access clarity | 92.1 |
+
+**Agent readiness 52.2** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 39.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/announcekit/](https://apis.io/providers/announcekit/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for AnnounceKit: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/announcekit/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
