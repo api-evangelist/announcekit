@@ -1,0 +1,282 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://announcekit.app/pricing
+sources:
+- https://announcekit.app/pricing
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T141238
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-28'
+  managed_tier: Changelog
+published: true
+note: Modular per-product subscription; GraphQL API, webhooks and MCP server included in every product
+  at no extra charge. MAU overage $25 per 5,000; annual billing saves ~20%; 15-day free trial; 50% startup
+  discount.
+plan_count: 17
+currency: USD
+plans:
+- name: Changelog
+  price_text: $59 /mo
+  price: 59
+  currency: USD
+  period: month
+  unit: product
+  included_quota: 10,000 MAU included, 3 team members
+  overage: $25 per 5,000 MAU
+- name: Feature Requests & Roadmap
+  price_text: $49 /mo
+  price: 49
+  currency: USD
+  period: month
+  unit: product
+  included_quota: Boards, voting, roadmap, JIRA sync
+- name: Knowledge Base
+  price_text: $69 /mo
+  price: 69
+  currency: USD
+  period: month
+  unit: product
+  included_quota: Articles, search, help center domain
+- name: NPS
+  price_text: $59 /mo
+  price: 59
+  currency: USD
+  period: month
+  unit: product
+  included_quota: Unlimited surveys & responses
+- name: In-app Notifications
+  price_text: $99 /mo
+  price: 99
+  currency: USD
+  period: month
+  unit: product
+  included_quota: Banners, modals, popups, targeting
+- name: Product Tours
+  price_text: $69 /mo
+  price: 69
+  currency: USD
+  period: month
+  unit: product
+  included_quota: Tours, checklists, analytics
+- name: Enterprise License
+  price_text: from $799 /mo
+  price: 799
+  currency: USD
+  period: month
+  unit: project
+  included_quota: Every product & add-on, 100,000 MAU
+  overage: overage $20 per 5,000
+- name: Email add-on
+  price_text: $49 /mo
+  price: 49
+  currency: USD
+  period: month
+  unit: add-on
+  included_quota: 10,000 sends per month
+- name: Unlimited Team & RBAC
+  price_text: $39 /mo
+  price: 39
+  currency: USD
+  period: month
+  unit: add-on
+  included_quota: Unlimited team members
+- name: Segmentation & User Tracking
+  price_text: $49 /mo
+  price: 49
+  currency: USD
+  period: month
+  unit: add-on
+- name: Custom Branding
+  price_text: $39 /mo
+  price: 39
+  currency: USD
+  period: month
+  unit: add-on
+- name: Globalize
+  price_text: $49 /mo
+  price: 49
+  currency: USD
+  period: month
+  unit: add-on
+- name: Private & Authenticated
+  price_text: $59 /mo
+  price: 59
+  currency: USD
+  period: month
+  unit: add-on
+- name: Legal & Compliance
+  price_text: $49 /mo
+  price: 49
+  currency: USD
+  period: month
+  unit: add-on
+- name: Whitelabel
+  price_text: $59 /mo
+  price: 59
+  currency: USD
+  period: month
+  unit: add-on
+- name: SSO & SAML
+  price_text: $99 /mo
+  price: 99
+  currency: USD
+  period: month
+  unit: add-on
+- name: Audit Log
+  price_text: $29 /mo
+  price: 29
+  currency: USD
+  period: month
+  unit: add-on
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - subscription
+  units:
+  - object
+  plans:
+  - name: Changelog
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Feature Requests & Roadmap
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Knowledge Base
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: NPS
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: In-app Notifications
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Product Tours
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Enterprise License
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - object
+    periods:
+    - month
+  - name: Email add-on
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Unlimited Team & RBAC
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Segmentation & User Tracking
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Custom Branding
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Globalize
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Private & Authenticated
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Legal & Compliance
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Whitelabel
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: SSO & SAML
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
+  - name: Audit Log
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - month
